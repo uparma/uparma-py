@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from uparma.uparma import UParma as UP
+import uparam
 import pprint
 import sys
 
@@ -22,7 +22,7 @@ def main(parameter):
     this name.
     '''
 
-    up = UP()
+    up = uparma.UParma()
     source_style_matching_parameter_name = {}
     for source_style in up.parameter2id.keys():
         _id = up.parameter2id[source_style].get(parameter, None)

@@ -1,0 +1,8 @@
+
+
+
+
+class UParmaDict(dict):
+    """
+    """
+    pass
