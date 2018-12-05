@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from uparma.uparma import UParma as UP
 
 
