@@ -46,7 +46,13 @@ class UParma(object):
             if refresh_jsons is True:
                 with requests.get(url) as req:
                     with open(full_path, 'w') as j:
-                        print(req.json(), file=j)
+                        print(
+                            json.dumps(
+                                req.json(),
+                                indent=2,
+                                sort_keys=True
+                            ), file=j
+                        )
                     self.jsons[url_id] = req.json()
             else:
                 for url_id, url in URLS.items():
@@ -70,6 +76,7 @@ class UParma(object):
             if json_type != 'parameters':
                 continue
             for uparma_entry in self.jsons[url_id]:
+                print(uparma_entry)
                 _id = uparma_entry['_id']
                 self.parameters[_id] = uparma_entry
 
