@@ -13,7 +13,7 @@ class UParma(object):
     """
     Universal Parameter Mapper Class
     """
-    def __init__(self, refresh_jsons=False, source_style="ursgal_style_1"):
+    def __init__(self, refresh_jsons=True, source_style="ursgal_style_1"):
         self.source_style = source_style
         self.jsons = {}
         self.parameter2id = {}
