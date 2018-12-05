@@ -12,8 +12,19 @@ URLS = {
 class UParma(object):
     """
     Universal Parameter Mapper Class
+
+    Keyword Arguments:
+        refresh_jsons (bool): indicates if uparma jsons should be pulled from
+            central repo (https://github.com/uparma/uparma-lib) or not.
+            Note that if jsons are not available in uparma folder, option is
+            overridden and set to True.
+
+        source_style (str): Convenience when mapper is used to map from the
+            same source style every time, in which case self.convert can be used
+            instead of self.translate
+
     """
-    def __init__(self, refresh_jsons=True, source_style="ursgal_style_1"):
+    def __init__(self, refresh_jsons=False, source_style="ursgal_style_1"):
         self.source_style = source_style
         self.jsons = {}
         self.parameter2id = {}
@@ -22,6 +33,13 @@ class UParma(object):
 
         for url_id, url in URLS.items():
             json_file_name = os.path.basename(url)
+            full_path = os.path.join(
+                os.path.dirname(__file__), json_file_name
+            )
+            if os.path.exists(full_path) is False:
+                refresh_jsons = True
+                # we will have to pull
+
             if refresh_jsons is True:
                 with requests.get(url) as req:
                     with open(json_file_name, 'w') as j:
@@ -29,9 +47,7 @@ class UParma(object):
                     self.jsons[json_file_name] = req.json()
             else:
                 for url_id, url in URLS.items():
-                    full_path = os.path.join(
-                        os.path.dirname(__file__), json_file_name
-                    )
+
                     with open(full_path) as j:
                         self.jsons[json_file_name] = json.load(j)
 
@@ -40,12 +56,12 @@ class UParma(object):
     def _parse_jsons(self):
         """
         Parse and prepare jsons into internal structure in the form of::
-
             self.parameter2id = {
                 'xtandem_style_1' : {
                     'spectrum, parent monoisotopic mass error units' : 42
                 }
             }
+
         """
         for uparma_entry in self.jsons['parameters.json']:
 
@@ -81,7 +97,7 @@ class UParma(object):
         """
         Translate param_dict from source style into target style.
 
-        e.g.:
+        e.g.::
 
             {
                 "precursor_mass_tolerance_unit": "ppm",
