@@ -98,6 +98,8 @@ class UParma(object):
         """
         Convenient wrapper to translate params with the source style defined
         during init.
+
+        Calls self.translate with source_style = self.source_style
         """
         return self.translate(
             param_dict,
@@ -109,7 +111,7 @@ class UParma(object):
         """
         Translate param_dict from source style into target style.
 
-        e.g.::
+        e.g. from ursgal::
 
             {
                 "precursor_mass_tolerance_unit": "ppm",
@@ -123,22 +125,26 @@ class UParma(object):
                 '-t' : 'ppm'
             }
 
-        The return object is a dict like object, which holds additional
-        information about the input.
-        This information can be accessed via self.details
+        This dict is the return object. Additional, the dict holds additional
+        information about the input, which can be accessed via self.details.
+        For the example above, self.details looks like::
 
             {
                 'min_pep_length': {
-                    'translated_key': '-minLength',
-                    'translated_to': 'msgfplus_style_1',
-                    'translated_value': 8,
-                    'value': 8
+                    'source_key': 'min_pep_length',
+                    'source_style': 'ursgal_style_1',
+                    'source_value': 8,
+                    'target_key': '-minLength',
+                    'target_style': 'msgfplus_style_1',
+                    'target_value': 8
                 },
                 'precursor_mass_tolerance_unit': {
-                    'translated_key': '-t',
-                    'translated_to': 'msgfplus_style_1',
-                    'translated_value': 'ppm',
-                    'value': 'ppm'
+                    'source_key': 'precursor_mass_tolerance_unit',
+                   'source_style': 'ursgal_style_1',
+                   'source_value': 'ppm',
+                   'target_key': '-t',
+                   'target_style': 'msgfplus_style_1',
+                   'target_value': 'ppm'
                 }
             }
 
