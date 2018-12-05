@@ -2,6 +2,8 @@ import requests
 import os
 import json
 from collections import defaultdict as ddict
+import uparma
+
 
 URLS = {
     'parameter_url' : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/parameters.json',
@@ -107,6 +109,15 @@ class UParma(object):
         to msgfplus::
 
             {
+                '-minLength' : 8.
+                '-t' : 'ppm'
+            }
+
+        The return object is a dict like object, which holds additional
+        information about the input.
+        This information can be accessed via self.details
+
+            {
                 'min_pep_length': {
                     'translated_key': '-minLength',
                     'translated_to': 'msgfplus_style_1',
@@ -124,9 +135,8 @@ class UParma(object):
         """
         cannot_be_translated = "{0} for {1} cannot be translated into {2}"
 
-        translated_params = {}
+        translated_params = uparma.UParmaDict()
         for param_name, param_value in param_dict.items():
-            translated_params[param_name] = {}
 
             _id = self.parameter2id[source_style].get(param_name, None)
 
@@ -137,20 +147,38 @@ class UParma(object):
                 translated_key = self.parameters[_id][target_style]
 
             _value_translations = self.parameter2id[source_style].get("value_translations", None)
+
             translated_value = param_value
             if _value_translations is not None:
                 if target_style in _value_translations.keys():
                     if param_value in _value_translations[target_style].keys():
                         translated_value = _value_translations[target_style][param_value]
 
-            translated_params[param_name] = {
-                "value" : param_value,
-                "translated_key": translated_key,
-                "translated_value": translated_value,
-                "translated_to": target_style
+            translated_params.details[param_name] = {
+                "source_value" : param_value,
+                "source_key" : param_name,
+                "source_style": source_style,
+                "target_key": translated_key,
+                "target_value": translated_value,
+                "target_style": target_style
             }
+
+            translated_params[translated_key] = translated_value
+
         return translated_params
 
+
+
+class UParmaDict(dict):
+    """
+    UParma Dict
+
+    Is a dict which offers original key and values that have been translated by
+    the UParMa.
+    """
+    def __init__(self,*args, **kwargs):
+        self.details = {}
+        super().__init__(*args, **kwargs)
 
 
 

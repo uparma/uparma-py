@@ -2,7 +2,3 @@
 
 
 
-class UParmaDict(dict):
-    """
-    """
-    pass
