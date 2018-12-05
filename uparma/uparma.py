@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import requests
 import os
 import json
@@ -6,8 +7,10 @@ import uparma
 
 
 URLS = {
-    'parameter_url' : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/parameters.json',
-    'styles_url' : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/styles.json'
+    ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/general_parameters.json',
+    ('spectrum', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/spectrum_parameters.json',
+    ('modifications', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/modification_parameters.json',
+    ('general', 'styles') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/styles.json'
 }
 
 
@@ -46,12 +49,11 @@ class UParma(object):
                 with requests.get(url) as req:
                     with open(json_file_name, 'w') as j:
                         print(req.json(), file=j)
-                    self.jsons[json_file_name] = req.json()
+                    self.jsons[url_id] = req.json()
             else:
                 for url_id, url in URLS.items():
-
                     with open(full_path) as j:
-                        self.jsons[json_file_name] = json.load(j)
+                        self.jsons[url_id] = json.load(j)
 
         self._parse_jsons()
 
@@ -65,24 +67,27 @@ class UParma(object):
             }
 
         """
-        for uparma_entry in self.jsons['parameters.json']:
+        for url_id in self.jsons.keys():
+            json_tag, json_type = url_id
+            if json_type != 'parameters':
+                continue
+            for uparma_entry in self.jsons[url_id]:
+                _id = uparma_entry['_id']
+                self.parameters[_id] = uparma_entry
 
-            _id = uparma_entry['_id']
-            self.parameters[_id] = uparma_entry
+                for key, value in uparma_entry.items():
+                    if "style" in key:
+                        if isinstance(value, list):
+                            value = ", ".join(value)
+                        try:
+                            self.parameter2id[key][value] = _id
+                        except:
+                            self.parameter2id[key] = {value: _id}
+                            self.available_styles.append(key)
 
-            for key, value in uparma_entry.items():
-                if "style" in key:
-                    if isinstance(value, list):
-                        value = ", ".join(value)
-                    try:
-                        self.parameter2id[key][value] = _id
-                    except:
-                        self.parameter2id[key] = {value: _id}
-                        self.available_styles.append(key)
-
-            assert _id in self.parameters.keys(), """
-            ID {0} is not unique in parameters.json
-            """.format(_id)
+                assert _id in self.parameters.keys(), """
+                ID {0} is not unique in parameters.json
+                """.format(_id)
 
     def convert(self, param_dict, target_style=None):
         """
@@ -173,12 +178,15 @@ class UParmaDict(dict):
     """
     UParma Dict
 
-    Is a dict which offers original key and values that have been translated by
-    the UParMa.
+    Offers original key and values that have been translated by
+    the UParMa in self.details.
     """
     def __init__(self,*args, **kwargs):
         self.details = {}
         super().__init__(*args, **kwargs)
 
 
+
+if __name__ == '__main__':
+    UParma(refresh_jsons=True)
 
