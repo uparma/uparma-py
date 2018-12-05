@@ -10,6 +10,6 @@ uparma-py - the Python framework for uparma
    :alt: Travis CI status
 
 .. |doc-status| image:: http://readthedocs.org/projects/parma-py/badge/?version=latest
-   :target: http://ursgal.readthedocs.io/en/latest/?badge=latest
+   :target: http://parma-py.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
