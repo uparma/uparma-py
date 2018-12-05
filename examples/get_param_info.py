@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import uparam
+import uparma
 import pprint
 import sys
 
