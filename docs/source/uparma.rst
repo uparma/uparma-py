@@ -3,8 +3,8 @@
 
 .. default-domain:: py
 
-UParMa
-######
+Uparma - The Universal parameter mapper class in Python
+#######################################################
 
 .. autoclass:: uparma.uparma.UParma
    :members:

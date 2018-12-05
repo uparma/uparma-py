@@ -6,26 +6,14 @@
 Welcome to uparma-py's documentation!
 =====================================
 
-This is the Python Framework for the uparma project.
+.. include:: ../../README.rst
 
-Introduction
-------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+   :caption: Contents
 
-   intro
    uparma
-
-
-
-Contents
---------
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
    examples
 
 Indices and tables
@@ -36,4 +24,4 @@ Indices and tables
 * :ref:`search`
 
 
-Latest update |today|
+Latest update |today|!
