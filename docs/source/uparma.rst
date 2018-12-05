@@ -1,5 +1,5 @@
 
-.. unimod_mapper:
+.. uparma:
 
 .. default-domain:: py
 

@@ -26,7 +26,7 @@ Contents
    :maxdepth: 2
    :caption: Contents:
 
-
+   examples
 
 Indices and tables
 ==================
