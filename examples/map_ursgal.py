@@ -1,8 +1,8 @@
-from uparma.uparma import UParma as UP
+import uparma
 import pprint
 
 def main():
-    up = UP()
+    up = uparma.UParma()
     msgf_params = up.convert(
         {
             "precursor_mass_tolerance_unit": "ppm",

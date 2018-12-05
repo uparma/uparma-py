@@ -1,7 +1,7 @@
-from uparma.uparma import UParma as UP
+import uparma
 import random
 
-up = UP()
+up = uparma.UParma()
 
 def turn_into_hashable(entry):
    if isinstance(entry, list):
