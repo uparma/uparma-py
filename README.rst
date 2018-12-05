@@ -16,7 +16,7 @@ needs updating with proper links
    :target: https://ci.appveyor.com/project/JB-MS/ursgal
    :alt: AppVeyor CI status
 
-.. |doc-status| image:: http://readthedocs.org/projects/ursgal/badge/?version=latest
+.. |doc-status| image:: http://readthedocs.org/projects/parma-py/badge/?version=latest
    :target: http://ursgal.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
