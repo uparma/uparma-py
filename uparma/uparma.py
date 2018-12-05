@@ -124,7 +124,7 @@ class UParma(object):
         Returns:
             translated_params (dict-like): dict with the translated key and
                 values for the input dict with additional information in
-                self.details (see above).
+                self.details (see below).
 
         For example an input in ursgal style::
 
@@ -136,7 +136,7 @@ class UParma(object):
         can be converted to msgfplus style, yielding::
 
             {
-                '-minLength' : 8.
+                '-minLength' : 8,
                 '-t' : 'ppm'
             }
 
@@ -208,7 +208,7 @@ class UParmaDict(dict):
     UParma Dict
 
     Offers original key and values that have been translated by
-    the UParMa in self.details.
+    the UParma translate function and stored in self.details.
     """
     def __init__(self,*args, **kwargs):
         self.details = {}
