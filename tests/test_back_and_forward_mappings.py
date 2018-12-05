@@ -1,12 +1,8 @@
 import uparma
 import random
 
-up = uparma.UParma()
 
-def turn_into_hashable(entry):
-   if isinstance(entry, list):
-       entry = ', '.join(entry)
-   return entry
+up = uparma.UParma()
 
 def test_simple_back_and_forward_mapping():
     skey = random.choice(list(up.parameters.keys()))

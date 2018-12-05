@@ -111,22 +111,37 @@ class UParma(object):
         """
         Translate param_dict from source style into target style.
 
-        e.g. from ursgal::
+
+        Keyword Arguments:
+            param_dict (dict): dict containing parameter and value in a given
+                style
+
+            source_style (str): style of the input format
+
+            target_style (str): style to which the parameters should be
+                translated to.
+
+        Returns:
+            translated_params (dict-like): dict with the translated key and
+                values for the input dict with additional information in
+                self.details (see above).
+
+        For example an input in ursgal style::
 
             {
                 "precursor_mass_tolerance_unit": "ppm",
                 "min_pep_length" : 8
             }
 
-        to msgfplus::
+        can be converted to msgfplus style, yielding::
 
             {
                 '-minLength' : 8.
                 '-t' : 'ppm'
             }
 
-        This dict is the return object. Additional, the dict holds additional
-        information about the input, which can be accessed via self.details.
+        the return object is a dict-like structure which holds additional
+        detailed information accessible via self.details.
         For the example above, self.details looks like::
 
             {
@@ -147,6 +162,9 @@ class UParma(object):
                    'target_value': 'ppm'
                 }
             }
+
+
+
 
         """
         cannot_be_translated = "{0} for {1} cannot be translated into {2}"
