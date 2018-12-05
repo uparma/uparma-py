@@ -2,9 +2,7 @@
 import requests
 import os
 import json
-from collections import defaultdict as ddict
 import uparma
-
 
 URLS = {
     ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/general_parameters.json',
@@ -39,7 +37,7 @@ class UParma(object):
         for url_id, url in URLS.items():
             json_file_name = os.path.basename(url)
             full_path = os.path.join(
-                os.path.dirname(__file__), json_file_name
+                os.path.dirname(uparma.uparma.__file__), json_file_name
             )
             if os.path.exists(full_path) is False:
                 refresh_jsons = True
@@ -47,7 +45,7 @@ class UParma(object):
 
             if refresh_jsons is True:
                 with requests.get(url) as req:
-                    with open(json_file_name, 'w') as j:
+                    with open(full_path, 'w') as j:
                         print(req.json(), file=j)
                     self.jsons[url_id] = req.json()
             else:
@@ -140,7 +138,7 @@ class UParma(object):
         """
         cannot_be_translated = "{0} for {1} cannot be translated into {2}"
 
-        translated_params = uparma.UParmaDict()
+        translated_params = UParmaDict()
         for param_name, param_value in param_dict.items():
 
             _id = self.parameter2id[source_style].get(param_name, None)
