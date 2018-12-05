@@ -5,8 +5,8 @@ python:
   - "3.6"
 sudo: false
 
-before_install: pip install codecov
-after_success:  codecov
+# before_install: pip install codecov
+# after_success:  codecov
 
 install:
   - python setup.py install
