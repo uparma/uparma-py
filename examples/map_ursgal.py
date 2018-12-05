@@ -3,11 +3,13 @@ import uparma
 import pprint
 
 def main():
-    up = uparma.UParma()
+    up = uparma.UParma(refresh_jsons=True)
     msgf_params = up.convert(
         {
             "precursor_mass_tolerance_unit": "ppm",
-            "min_pep_length" : 8
+            "min_pep_length" : 8,
+            "max_num_mods"  : 3,
+
         },
         target_style = 'msgfplus_style_1'
     )
