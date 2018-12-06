@@ -5,9 +5,7 @@ import json
 import uparma
 
 URLS = {
-    ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/general_parameters.json',
-    ('spectrum', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/spectrum_parameters.json',
-    ('modifications', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/modification_parameters.json',
+    ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/parameters.json',
     ('general', 'styles') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/styles.json'
 }
 
@@ -55,9 +53,8 @@ class UParma(object):
                         )
                     self.jsons[url_id] = req.json()
             else:
-                for url_id, url in URLS.items():
-                    with open(full_path) as j:
-                        self.jsons[url_id] = json.load(j)
+                with open(full_path) as j:
+                    self.jsons[url_id] = json.load(j)
 
         self._parse_jsons()
 
@@ -71,12 +68,14 @@ class UParma(object):
             }
 
         """
+        # print(self.jsons[('general', 'parameters')])
+        # exit()
         for url_id in self.jsons.keys():
             json_tag, json_type = url_id
             if json_type != 'parameters':
                 continue
+            # print(url_id)
             for uparma_entry in self.jsons[url_id]:
-                print(uparma_entry)
                 _id = uparma_entry['_id']
                 self.parameters[_id] = uparma_entry
 
