@@ -60,7 +60,7 @@ def main(parameter):
         )
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
+    if len(sys.argv) != 2:
         print(main.__doc__)
         exit()
     main(sys.argv[1])

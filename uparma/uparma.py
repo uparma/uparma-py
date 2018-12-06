@@ -2,7 +2,7 @@
 import requests
 import os
 import json
-from collections import defaultdict as ddict
+import uparma
 
 URLS = {
     ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/general_parameters.json',
@@ -37,7 +37,7 @@ class UParma(object):
         for url_id, url in URLS.items():
             json_file_name = os.path.basename(url)
             full_path = os.path.join(
-                os.path.dirname(__file__), json_file_name
+                os.path.dirname(uparma.uparma.__file__), json_file_name
             )
             if os.path.exists(full_path) is False:
                 refresh_jsons = True
@@ -45,8 +45,14 @@ class UParma(object):
 
             if refresh_jsons is True:
                 with requests.get(url) as req:
-                    with open(json_file_name, 'w') as j:
-                        print(req.json(), file=j)
+                    with open(full_path, 'w') as j:
+                        print(
+                            json.dumps(
+                                req.json(),
+                                indent=2,
+                                sort_keys=True
+                            ), file=j
+                        )
                     self.jsons[url_id] = req.json()
             else:
                 for url_id, url in URLS.items():
@@ -70,6 +76,7 @@ class UParma(object):
             if json_type != 'parameters':
                 continue
             for uparma_entry in self.jsons[url_id]:
+                print(uparma_entry)
                 _id = uparma_entry['_id']
                 self.parameters[_id] = uparma_entry
 
@@ -91,6 +98,8 @@ class UParma(object):
         """
         Convenient wrapper to translate params with the source style defined
         during init.
+
+        Calls self.translate with source_style = self.source_style
         """
         return self.translate(
             param_dict,
@@ -102,36 +111,66 @@ class UParma(object):
         """
         Translate param_dict from source style into target style.
 
-        e.g.::
+
+        Keyword Arguments:
+            param_dict (dict): dict containing parameter and value in a given
+                style
+
+            source_style (str): style of the input format
+
+            target_style (str): style to which the parameters should be
+                translated to.
+
+        Returns:
+            translated_params (dict-like): dict with the translated key and
+                values for the input dict with additional information in
+                self.details (see below).
+
+        For example an input in ursgal style::
 
             {
                 "precursor_mass_tolerance_unit": "ppm",
                 "min_pep_length" : 8
             }
 
-        to msgfplus::
+        can be converted to msgfplus style, yielding::
+
+            {
+                '-minLength' : 8,
+                '-t' : 'ppm'
+            }
+
+        the return object is a dict-like structure which holds additional
+        detailed information accessible via self.details.
+        For the example above, self.details looks like::
 
             {
                 'min_pep_length': {
-                    'translated_key': '-minLength',
-                    'translated_to': 'msgfplus_style_1',
-                    'translated_value': 8,
-                    'value': 8
+                    'source_key': 'min_pep_length',
+                    'source_style': 'ursgal_style_1',
+                    'source_value': 8,
+                    'target_key': '-minLength',
+                    'target_style': 'msgfplus_style_1',
+                    'target_value': 8
                 },
                 'precursor_mass_tolerance_unit': {
-                    'translated_key': '-t',
-                    'translated_to': 'msgfplus_style_1',
-                    'translated_value': 'ppm',
-                    'value': 'ppm'
+                    'source_key': 'precursor_mass_tolerance_unit',
+                   'source_style': 'ursgal_style_1',
+                   'source_value': 'ppm',
+                   'target_key': '-t',
+                   'target_style': 'msgfplus_style_1',
+                   'target_value': 'ppm'
                 }
             }
+
+
+
 
         """
         cannot_be_translated = "{0} for {1} cannot be translated into {2}"
 
-        translated_params = {}
+        translated_params = UParmaDict()
         for param_name, param_value in param_dict.items():
-            translated_params[param_name] = {}
 
             _id = self.parameter2id[source_style].get(param_name, None)
 
@@ -142,19 +181,38 @@ class UParma(object):
                 translated_key = self.parameters[_id][target_style]
 
             _value_translations = self.parameter2id[source_style].get("value_translations", None)
+
             translated_value = param_value
             if _value_translations is not None:
                 if target_style in _value_translations.keys():
                     if param_value in _value_translations[target_style].keys():
                         translated_value = _value_translations[target_style][param_value]
 
-            translated_params[param_name] = {
-                "value" : param_value,
-                "translated_key": translated_key,
-                "translated_value": translated_value,
-                "translated_to": target_style
+            translated_params.details[param_name] = {
+                "source_value" : param_value,
+                "source_key" : param_name,
+                "source_style": source_style,
+                "target_key": translated_key,
+                "target_value": translated_value,
+                "target_style": target_style
             }
+
+            translated_params[translated_key] = translated_value
+
         return translated_params
+
+
+
+class UParmaDict(dict):
+    """
+    UParma Dict
+
+    Offers original key and values that have been translated by
+    the UParma translate function and stored in self.details.
+    """
+    def __init__(self,*args, **kwargs):
+        self.details = {}
+        super().__init__(*args, **kwargs)
 
 
 

@@ -1,5 +1,5 @@
-uparma-py - the Python framework for uparma
-###########################################
+uparma-py - the Python framework for the uparma project
+=======================================================
 
 *UPARMA - Universal Parameter Mapper for Proteomics*
 
@@ -13,3 +13,17 @@ uparma-py - the Python framework for uparma
    :target: http://parma-py.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
+Installation
+############
+
+Use pip to install, use virtualenv for maximum convenience::
+
+    user@localhost$ pip install -r requirements
+
+
+Testing
+#######
+
+Use pytest to run tests::
+
+    user@localhost$ pytest
