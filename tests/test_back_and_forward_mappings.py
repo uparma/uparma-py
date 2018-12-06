@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 import uparma
 import random
 
-up = uparma.UParma()
+up = uparma.UParma(refresh_jsons=True)
 
 def turn_into_hashable(entry):
    if isinstance(entry, list):
