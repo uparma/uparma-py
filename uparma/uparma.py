@@ -5,8 +5,8 @@ import json
 import uparma
 
 URLS = {
-    ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/parameters.json',
-    ('general', 'styles') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/styles.json'
+    ('general', 'parameters') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json',
+    ('general', 'styles') : 'https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/styles.json'
 }
 
 
@@ -63,7 +63,8 @@ class UParma(object):
         Parse and prepare jsons into internal structure in the form of::
             self.parameter2id = {
                 'xtandem_style_1' : {
-                    'spectrum, parent monoisotopic mass error units' : 42
+                    'spectrum, parent monoisotopic mass error units' : 42,
+                    ...
                 }
             }
 
@@ -206,8 +207,8 @@ class UParmaDict(dict):
     """
     UParma Dict
 
-    Offers original key and values that have been translated by
-    the UParma translate function and stored in self.details.
+    Regular dict, yet offers original key and values that have been translated by
+    the UParma translate function in self.details.
     """
     def __init__(self,*args, **kwargs):
         self.details = {}
