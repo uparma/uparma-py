@@ -3,7 +3,7 @@ import uparma
 import random
 
 
-up = uparma.UParma(refresh_jsons=True)
+up = uparma.UParma(refresh_jsons=False)
 
 
 def test_simple_back_and_forward_mapping():
@@ -11,7 +11,7 @@ def test_simple_back_and_forward_mapping():
         skey = random.choice(list(up.parameters.keys()))
 
         param_dict = up.parameters[skey]
-        available_styles = [k for k in param_dict.keys() if 'style' in k]
+        available_styles = param_dict["key_translations"].keys()
         if len(available_styles) >= 2:
             break
 
@@ -23,14 +23,12 @@ def test_simple_back_and_forward_mapping():
         except:
             source_style, target_style = random.sample(available_styles, 2)
             # python <3.7
-        if source_style in param_dict.keys() and target_style in param_dict.keys():
-            if isinstance(param_dict[source_style], str) and \
-                isinstance(param_dict[target_style], str):
-                    break
+        if source_style in available_styles and target_style in available_styles:
+            break
 
     print(source_style, target_style)
     original_dict = {
-        param_dict[source_style] : 42
+        param_dict["key_translations"][source_style]: 42
      }
     print('original_dict', original_dict)
     forward_mapping = up.translate(
