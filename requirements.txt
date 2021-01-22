@@ -1,3 +1,5 @@
 requests
 pytest
-
+tox
+coverage
+codecov
