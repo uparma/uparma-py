@@ -28,28 +28,27 @@ test_data = [
 ]
 test_data_list = [
     {
+        "input": {
+            # "data_source": f"https://{Path(__file__).parent.joinpath('parameters.json').as_posix()}",
+            "data_source": "https://raw.githubusercontent.com/uparma/uparma-lib/feature/new_params/jsons/parameters.json",
+            "identifier": ("general", "parameters"),
+        },
+        "results": {
+            "size": 361,
+            "names": [
+                "experiment_setup",
+                "isotopic_distribution_tolerance",
+                "normalize_intensities",
+                "integrate_peak_areas",
+                "only_precursor_charge",
+                "match_between_runs",
+            ],
+        },
+    },
+    {
         "input": {"data_source": "rubbish", "identifier": ("general", "parameters")},
         "results": None,
     },
-    # {
-    #     "input": {
-    #         # "data_source": f"https://{Path(__file__).parent.joinpath('parameters.json').as_posix()}",
-    #         "data_source": "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json",
-    #         "identifier": ("general", "parameters"),
-    #     },
-    #     "results": {
-    #         "size": 7,
-    #         "names": [
-    #             "max_num_mods",
-    #             "min_pep_length",
-    #             "precursor_mass_tolerance_unit",
-    #             "precursor_mass_tolerance_minus",
-    #             "precursor_mass_tolerance_plus",
-    #             "max_mod_alternatives",
-    #             "score_ion_list",
-    #         ],
-    #     },
-    # },
     {
         "input": {"data_source": test_data, "identifier": ("general", "parameters")},
         "results": {"size": 1, "names": ["experiment_setup"]},
@@ -87,7 +86,9 @@ test_data_list = [
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_load_data(test_dict):
     param = test_dict["input"]
-    loaded = up.load_data(identifier=param["identifier"], data_source=param["data_source"])
+    loaded = up.load_data(
+        identifier=param["identifier"], data_source=param["data_source"]
+    )
 
     results = test_dict["results"]
     if results is None:

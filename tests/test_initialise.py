@@ -5,19 +5,19 @@ import os
 from pathlib import Path
 
 test_data_list = [
-    # {
-    #     "input": {
-    #         (
-    #             "general",
-    #             "parameters",
-    #         ): "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json",
-    #         (
-    #             "general",
-    #             "styles",
-    #         ): "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/styles.json",
-    #     },
-    #     "results": None,
-    # },
+    {
+        "input": {
+            (
+                "general",
+                "parameters",
+            ): "https://raw.githubusercontent.com/uparma/uparma-lib/feature/new_params/jsons/parameters.json",
+            (
+                "general",
+                "styles",
+            ): "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/styles.json",
+        },
+        "results": None,
+    },
     {
         "input": {
             ("general", "parameters"): "parameters.json",

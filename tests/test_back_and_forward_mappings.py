@@ -30,7 +30,7 @@ def test_simple_back_and_forward_mapping():
         if source_style in available_styles and target_style in available_styles:
             break
 
-    print(source_style, target_style)
+    print(skey, source_style, target_style)
     # generate appropriate value
     if source_style in param_dict["value_translations"]:
         idx = random.randrange(len(param_dict["value_translations"][source_style]))

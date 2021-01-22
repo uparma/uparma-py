@@ -6,11 +6,18 @@ import uparma
 from pathlib import Path
 
 URLS = {
-    ('general', 'parameters'): 'https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json',
-    ('general', 'styles'): 'https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/styles.json'
+    (
+        "general",
+        "parameters",
+    ): "https://raw.githubusercontent.com/uparma/uparma-lib/feature/new_params/jsons/parameters.json",
+    (
+        "general",
+        "styles",
+    ): "https://raw.githubusercontent.com/uparma/uparma-lib/feature/new_params/jsons/parameters.json",
 }
 
-base_path = Path(__file__).parent
+base_path = Path(__file__)
+
 
 class UParma(object):
     """
@@ -27,7 +34,10 @@ class UParma(object):
             instead of self.translate
 
     """
-    def __init__(self, parameter_data=None, refresh_jsons=False, source_style="ursgal_style_1"):
+
+    def __init__(
+        self, parameter_data=None, refresh_jsons=False, source_style="ursgal_style_1"
+    ):
         self.source_style = source_style
         self.jsons = {}
         self.parameter2id = {}
@@ -166,12 +176,12 @@ class UParma(object):
         # exit()
         for url_id in self.jsons.keys():
             json_tag, json_type = url_id
-            if json_type != 'parameters':
+            if json_type != "parameters":
                 continue
 
             # print(url_id)
             for uparma_entry in self.jsons[url_id]:
-                _id = uparma_entry['_id']
+                _id = uparma_entry["_id"]
                 self.parameters[_id] = uparma_entry
 
                 for key, value in uparma_entry["key_translations"].items():
@@ -183,9 +193,13 @@ class UParma(object):
                         self.parameter2id[key] = {value: _id}
                         self.available_styles.append(key)
 
-                assert _id in self.parameters.keys(), """
+                assert (
+                    _id in self.parameters.keys()
+                ), """
                 ID {0} is not unique in parameters.json
-                """.format(_id)
+                """.format(
+                    _id
+                )
 
     def convert(self, param_dict, target_style=None):
         """
@@ -195,9 +209,7 @@ class UParma(object):
         Calls self.translate with source_style = self.source_style
         """
         return self.translate(
-            param_dict,
-            source_style=self.source_style,
-            target_style=target_style
+            param_dict, source_style=self.source_style, target_style=target_style
         )
 
     def translate(self, param_dict, source_style=None, target_style=None):
@@ -272,8 +284,12 @@ class UParma(object):
                 translated_key = self.parameters[_id]["key_translations"][target_style]
 
             parameter_data = self.parameters[_id]
-            source_translations = parameter_data["value_translations"].get(source_style, None)
-            target_translations = parameter_data["value_translations"].get(target_style, None)
+            source_translations = parameter_data["value_translations"].get(
+                source_style, None
+            )
+            target_translations = parameter_data["value_translations"].get(
+                target_style, None
+            )
 
             # convert param_value with source value_translations
             if source_translations is None:
@@ -303,7 +319,7 @@ class UParma(object):
                 "source_style": source_style,
                 "target_key": translated_key,
                 "target_value": target_value,
-                "target_style": target_style
+                "target_style": target_style,
             }
 
             translated_params[translated_key] = target_value
@@ -318,11 +334,11 @@ class UParmaDict(dict):
     Regular dict, yet offers original key and values that have been translated by
     the UParma translate function in self.details.
     """
-    def __init__(self,*args, **kwargs):
+
+    def __init__(self, *args, **kwargs):
         self.details = {}
         super().__init__(*args, **kwargs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     UParma(refresh_jsons=True)
-
