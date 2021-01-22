@@ -2,13 +2,17 @@
 import uparma
 import random
 
-
-up = uparma.UParma(refresh_jsons=False)
+jsons = {
+    ("general", "parameters"): "parameters.json",
+    ("general", "styles"): "styles.json",
+}
+up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
 
 
 def test_simple_back_and_forward_mapping():
     while True:
         skey = random.choice(list(up.parameters.keys()))
+        # skey = 54
 
         param_dict = up.parameters[skey]
         available_styles = param_dict["key_translations"].keys()
@@ -27,8 +31,14 @@ def test_simple_back_and_forward_mapping():
             break
 
     print(source_style, target_style)
+    # generate appropriate value
+    if source_style in param_dict["value_translations"]:
+        idx = random.randrange(len(param_dict["value_translations"][source_style]))
+        value = param_dict["value_translations"][source_style][idx][1]
+    else:
+        value = param_dict["default_value"]
     original_dict = {
-        param_dict["key_translations"][source_style]: 42
+        param_dict["key_translations"][source_style]: value
      }
     print('original_dict', original_dict)
     forward_mapping = up.translate(

@@ -4,7 +4,12 @@ import json
 import os
 from pathlib import Path
 
-up = uparma.UParma(refresh_jsons=False)
+jsons = {
+    ("general", "parameters"): "parameters.json",
+    ("general", "styles"): "styles.json",
+}
+up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
+
 
 test_data = [
     {
@@ -23,24 +28,28 @@ test_data = [
 ]
 test_data_list = [
     {
-        "input": {
-            "data_source": f"https://{Path(__file__).parent.joinpath('parameters.json').as_posix()}",
-            # "data_source": "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json",
-            "identifier": ("general", "parameters"),
-        },
-        "results": {
-            "size": 7,
-            "names": [
-                "max_num_mods",
-                "min_pep_length",
-                "precursor_mass_tolerance_unit",
-                "precursor_mass_tolerance_minus",
-                "precursor_mass_tolerance_plus",
-                "max_mod_alternatives",
-                "score_ion_list",
-            ],
-        },
+        "input": {"data_source": "rubbish", "identifier": ("general", "parameters")},
+        "results": None,
     },
+    # {
+    #     "input": {
+    #         # "data_source": f"https://{Path(__file__).parent.joinpath('parameters.json').as_posix()}",
+    #         "data_source": "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json",
+    #         "identifier": ("general", "parameters"),
+    #     },
+    #     "results": {
+    #         "size": 7,
+    #         "names": [
+    #             "max_num_mods",
+    #             "min_pep_length",
+    #             "precursor_mass_tolerance_unit",
+    #             "precursor_mass_tolerance_minus",
+    #             "precursor_mass_tolerance_plus",
+    #             "max_mod_alternatives",
+    #             "score_ion_list",
+    #         ],
+    #     },
+    # },
     {
         "input": {"data_source": test_data, "identifier": ("general", "parameters")},
         "results": {"size": 1, "names": ["experiment_setup"]},
@@ -78,11 +87,15 @@ test_data_list = [
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_load_data(test_dict):
     param = test_dict["input"]
-    up.load_data(identifier=param["identifier"], data_source=param["data_source"])
+    loaded = up.load_data(identifier=param["identifier"], data_source=param["data_source"])
 
     results = test_dict["results"]
-    assert len(up.jsons[param["identifier"]]) == results["size"]
+    if results is None:
+        assert loaded is False
+        assert up.jsons[param["identifier"]] is None
+    else:
+        assert loaded is True
+        assert len(up.jsons[param["identifier"]]) == results["size"]
 
-    for idx, name in enumerate(results["names"]):
-        assert up.jsons[param["identifier"]][idx]["name"] == name
-    xx = 1
+        for idx, name in enumerate(results["names"]):
+            assert up.jsons[param["identifier"]][idx]["name"] == name
