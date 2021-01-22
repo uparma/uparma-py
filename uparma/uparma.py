@@ -41,6 +41,7 @@ class UParma(object):
         self.source_style = source_style
         self.jsons = {}
         self.parameter2id = {}
+        self.parameter2id_list = {}
         self.available_styles = []
         self.parameters = {}
 
@@ -193,6 +194,13 @@ class UParma(object):
                         self.parameter2id[key] = {value: _id}
                         self.available_styles.append(key)
 
+                    try:
+                        self.parameter2id_list[key][value].append(_id)
+                    except:
+                        if key not in self.parameter2id_list:
+                            self.parameter2id_list[key] = {}
+                        self.parameter2id_list[key][value] = [_id]
+
                 assert (
                     _id in self.parameters.keys()
                 ), """
@@ -292,6 +300,7 @@ class UParma(object):
             )
 
             # convert param_value with source value_translations
+            source_value = None
             if source_translations is None:
                 # no translator so keep value
                 source_value = param_value
@@ -300,7 +309,10 @@ class UParma(object):
                     if value == param_value:
                         source_value = key
                         break
+                if source_value is None:
+                    source_value = param_value
 
+            target_value = None
             if target_translations is None:
                 # no translator so keep value
                 target_value = source_value
