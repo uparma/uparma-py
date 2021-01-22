@@ -2,6 +2,51 @@ language: python
 python:
 - '3.6'
 sudo: false
+
+py35-steps: &py35-steps
+  env:
+    - PATH=/c/Users/travis/AppData/Roaming/Python/Python35/Scripts:/c/Python35:/c/Python35/Scripts:/c/Users/travis/AppData/Roaming/Python/Python35/Scripts:$PATH
+    - TOXENV=py35
+  before_install:
+    - choco install python --version 3.5.4
+    - python -m pip install --upgrade pip
+    - pip install --user tox
+
+py36-steps: &py36-steps
+  env:
+    - PATH=/c/Users/travis/AppData/Roaming/Python/Python36/Scripts:/c/Python36:/c/Python36/Scripts:/c/Users/travis/AppData/Roaming/Python/Python36/Scripts:$PATH
+    - TOXENV=py36
+  before_install:
+    - choco install python --version 3.6.8
+    - python -m pip install --upgrade pip
+    - pip install --user tox
+
+py37-steps: &py37-steps
+  env:
+  env:
+    - PATH=/c/Users/travis/AppData/Roaming/Python/Python37/Scripts:/c/Python37:/c/Python37/Scripts:/c/Users/travis/AppData/Roaming/Python/Python37/Scripts:$PATH
+    - TOXENV=py37
+  before_install:
+    - choco install python --version 3.7.8
+    - pip install --user tox
+
+py38-steps: &py38-steps
+  env:
+  env:
+    - PATH=/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:/c/Python38:/c/Python38/Scripts:/c/Users/travis/AppData/Roaming/Python/Python38/Scripts:$PATH
+    - TOXENV=py38
+  before_install:
+    - choco install python --version 3.8.2
+    - pip install --user tox
+py39-steps: &py39-steps
+  env:
+  env:
+    - PATH=/c/Users/travis/AppData/Roaming/Python/Python39/Scripts:/c/Python39:/c/Python39/Scripts:/c/Users/travis/AppData/Roaming/Python/Python39/Scripts:$PATH
+    - TOXENV=py39
+  before_install:
+    - choco install python --version 3.9.0
+    - pip install --user tox
+
 matrix:
   include:
   - python: 3.5
@@ -19,14 +64,31 @@ matrix:
     env: TOXENV=docu
   - python: 3.6
     env: TOXENV=coverage
+  - name: 'py35-windows'
+    python: 3.5
+    env: TOXENV=py35
+    os: windows
+    language: shell
+    <<: *py35-steps
+  - name: 'py36-windows'
+    env: TOXENV=py36
+    os: windows
+    language: shell
+    <<: *py36-steps
+  - name: 'py37-windows'
+    env: TOXENV=py37
+    os: windows
+    language: shell
+    <<: *py37-steps
 install:
   - pip install tox-travis
-script: tox
+script:
+  - tox -e "${TOXENV}"
 deploy:
   provider: pypi
   user: pyratez
   password:
-    secure: "eBvuZ6jAkLVxwHFRJbagVv80l8ssdMDwwpVpfGFsSuhhLWy49HKxspheCr0Tnd4xvlddG+1BXvrUVSmBHmeclEboM5/ddVBJSRp3WIBuR7Z6JirKdFRizamQH/Z0uisuwJyJ0mj5o6qjJFLz6ri7dXaO0epOGuadlaTyTMeTEEqvUpMA4XP1LQqUMAkAaRoURmuBwH2Y3ocQXPLSNYTu0u5+3LLgf4UZ1ZxX/Bv5abBwHyq0TkPnUVkAu2GJ5xhR9ZHJZY8aA5y08sAE9pC9pwyidiiBgK+kmPCX9Owd47SgLzF4K5f5po2fuBtRC8cA5/lf1ykeKwJCHtzcHBJ6jgmg8WFlmri6/Hda72hDZPVhpzYKYqzGUOdIxgT2TwE3L27aL7jR9y2hXLjnM7KvEWCOD9AbylZz9yoe1r3jV1Y97J5nAp7eG3rrzvZJyhhpyQ0PJ0OEvYYqGSrthP40AnVdUyMtcTFCQoWe4G0oA5Z4it3/VZFWNAFwaRV++HdIWOf522PIbk6AsZYlkxCncVD+8oV9RqaiCpZXV5bLDTAW2spfJt+LDeTxVgMc6+DUS5Lul1DPD4PkPc09NW8vs4rEEutoMzzncKAJZtuRfW5JZcJTixOxYN0Eaqb4NNS9uYgFCERdp5BLwihG2Tyiruc3729OeD4uueU/GsVm7Xs="
+    secure: "HeCtDqHQzZMn7ccPFpq4WgtxlIaSYu2ZfluMDXZFz+ybkFqA5KgA2vm9YSooYlNtFwy3VyUvMkGIKA3uHgiqNRe6rXxHVRsLk7ny4ImYz5Y7jUUHEi+XC0FwgANqt2bpqpAcE7imacFKnPknrWA8ZZYRx8Vb+d5YDkBB/J7P19xCDlkxUHIi3pi/lvgR6wBtiSqRq1jWTaaT69GkwiFZ9LjdxsUZYg6NwXM0SodV+11f9vGuelSRN9TjuxEjEQAS2mb3dupn99MG9v+Bka1kv6StlOjPfGtPO9s32kSNwyE8NQBWa6rlI5OWTwzT/UHJTViZ44owLiGdlRz+8H7HsbZZhF1Dq580Ql8d2taPv/ZzacfWfiHAW5ZR6J0LabsGzKQWbs4P9nFBDGf/O1VxneFXxOVswYcMYoJ3GzP48gtLSUnTX6WkyZDJfHPjih25AD0GetWRYa2rx984uyTgjdoPdYdzn1CJEIAIR2UstZz9e1sNRsB96PG1/UADiKQZYAT96c64TzyDn4PPzqbUSOYLtptROTYLwFMFfCf7ymKWs0ZJ4EwETwGArg6c5F9DeQwTnHNXgzD4yaNjqgkGHl+jabeKZdJnh41Bkzjt9lPwj6EWEIx7PBVsadjTmwI2+i9qq2B8euk/IQKu7F7APx/tjhhet48bTL7cWuf5mJA="
   distributions: sdist bdist_wheel bdist_egg
   on:
     tags: true
