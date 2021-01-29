@@ -175,6 +175,7 @@ class UParma(object):
         """
         # print(self.jsons[('general', 'parameters')])
         # exit()
+        self.parameter2id = {}
         for url_id in self.jsons.keys():
             json_tag, json_type = url_id
             if json_type != "parameters":
@@ -188,26 +189,38 @@ class UParma(object):
                 for key, value in uparma_entry["key_translations"].items():
                     if isinstance(value, list):
                         value = ", ".join(value)
-                    try:
-                        self.parameter2id[key][value] = _id
-                    except:
+
+                    if key in self.parameter2id:
+                        # found key does value also exist
+                        if value in self.parameter2id[key]:
+                            # parameter already found
+                            raise ValueError(f"Duplicate parameter found: {key} - {value}")
+                        else:
+                            # add value = _id
+                            self.parameter2id[key][value] = _id
+                    else:
                         self.parameter2id[key] = {value: _id}
                         self.available_styles.append(key)
+                    # try:
+                    #     self.parameter2id[key][value] = _id
+                    # except:
+                    #     self.parameter2id[key] = {value: _id}
+                    #     self.available_styles.append(key)
+                    #
+                    # try:
+                    #     self.parameter2id_list[key][value].append(_id)
+                    # except:
+                    #     if key not in self.parameter2id_list:
+                    #         self.parameter2id_list[key] = {}
+                    #     self.parameter2id_list[key][value] = [_id]
 
-                    try:
-                        self.parameter2id_list[key][value].append(_id)
-                    except:
-                        if key not in self.parameter2id_list:
-                            self.parameter2id_list[key] = {}
-                        self.parameter2id_list[key][value] = [_id]
-
-                assert (
-                    _id in self.parameters.keys()
-                ), """
-                ID {0} is not unique in parameters.json
-                """.format(
-                    _id
-                )
+                # assert (
+                #     _id in self.parameters.keys()
+                # ), """
+                # ID {0} is not unique in parameters.json
+                # """.format(
+                #     _id
+                # )
 
     def convert(self, param_dict, target_style=None):
         """
@@ -317,12 +330,14 @@ class UParma(object):
                 # no translator so keep value
                 target_value = source_value
             else:
+                mapped = False
                 for key, value in target_translations:
                     if key == source_value:
                         target_value = value
+                        mapped = True
                         break
 
-                if target_value is None:
+                if mapped is False and target_value is None:
                     target_value = source_value
 
             translated_params.details[param_name] = {

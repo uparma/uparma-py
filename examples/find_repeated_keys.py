@@ -4,7 +4,7 @@ jsons = {
     ("general", "parameters"): "parameters.json",
     ("general", "styles"): "styles.json",
 }
-up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
+up = uparma.UParma(refresh_jsons=True , parameter_data=jsons)
 
 data = up.parameter2id_list
 frequencies = {}
