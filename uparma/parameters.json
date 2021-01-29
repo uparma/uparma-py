@@ -6642,8 +6642,7 @@
     "value_translations": {
       "omssa_style_1": [
         [
-          "all",
-          0
+          0, "all"
         ]
       ]
     },

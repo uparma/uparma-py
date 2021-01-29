@@ -28,7 +28,7 @@ for test_id in param_w_value_trans:
     if use_to_test is True:
         test_data_list.append(test_id)
 
-test_data_list = [146]
+# test_data_list = [146]
 
 @pytest.mark.parametrize("test_id", test_data_list)
 def test_simple_back_and_forward_mapping(test_id):
