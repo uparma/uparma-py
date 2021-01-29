@@ -47,8 +47,6 @@ def test_simple_back_and_forward_mapping(test_id):
             print()
             print(source_style, target_style)
 
-            if source_style == "pepnovo_style_1" and target_style == "ursgal_style_1":
-                xx = 1
             translations = param_dict["value_translations"].get(source_style, None)
 
             if translations is None:
@@ -74,6 +72,4 @@ def test_simple_back_and_forward_mapping(test_id):
                     target_style=source_style
                 )
                 print('retour_mapping', retour_mapping)
-                if retour_mapping != original_dict:
-                    xx = 1
                 assert retour_mapping == original_dict
