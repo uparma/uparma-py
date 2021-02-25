@@ -194,33 +194,15 @@ class UParma(object):
                         # found key does value also exist
                         if value in self.parameter2id[key]:
                             # parameter already found
-                            raise ValueError(f"Duplicate parameter found: {key} - {value}")
+                            raise ValueError(
+                                f"Duplicate parameter found: {key} - {value}"
+                            )
                         else:
                             # add value = _id
                             self.parameter2id[key][value] = _id
                     else:
                         self.parameter2id[key] = {value: _id}
                         self.available_styles.append(key)
-                    # try:
-                    #     self.parameter2id[key][value] = _id
-                    # except:
-                    #     self.parameter2id[key] = {value: _id}
-                    #     self.available_styles.append(key)
-                    #
-                    # try:
-                    #     self.parameter2id_list[key][value].append(_id)
-                    # except:
-                    #     if key not in self.parameter2id_list:
-                    #         self.parameter2id_list[key] = {}
-                    #     self.parameter2id_list[key][value] = [_id]
-
-                # assert (
-                #     _id in self.parameters.keys()
-                # ), """
-                # ID {0} is not unique in parameters.json
-                # """.format(
-                #     _id
-                # )
 
     def convert(self, param_dict, target_style=None):
         """
@@ -352,6 +334,18 @@ class UParma(object):
             translated_params[translated_key] = target_value
 
         return translated_params
+
+    def identify_parameters_triggering_rerun(self, params, source_style=None):
+        if source_style is None:
+            source_style = self.source_style
+
+        params_that_trigger_rerun = []
+        for param_name in params.keys():
+            _id = self.parameter2id[source_style].get(param_name, None)
+            if self.parameters[_id].get("triggers_rerun", False) is True:
+                params_that_trigger_rerun.append(param_name)
+
+        return params_that_trigger_rerun
 
 
 class UParmaDict(dict):
