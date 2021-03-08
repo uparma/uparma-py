@@ -341,11 +341,49 @@ class UParma(object):
 
         params_that_trigger_rerun = []
         for param_name in params.keys():
+            # breakpoint()
             _id = self.parameter2id[source_style].get(param_name, None)
             if self.parameters[_id].get("triggers_rerun", False) is True:
                 params_that_trigger_rerun.append(param_name)
 
         return params_that_trigger_rerun
+
+    def get_default_params_for_style(self, target_style):
+        """Short summary.
+
+        Args:
+            target_style (str): Description of parameter `target_style`.
+
+        Returns:
+            dict: Description of returned object.
+
+        """
+        # breakpoint()
+        params = {}
+        for key, value in self.parameters.items():
+            if (
+                translated_key := value["key_translations"].get(target_style, None)
+            ) is not None:
+                untranslated_default = value["default_value"]
+                if untranslated_default is None:
+                    print(value)
+                    continue
+                if "value_translations" in value:
+                    if target_style in value["value_translations"]:
+                        # breakpoint()
+                        # print(untranslated_default)
+                        translated_default = dict(
+                            value["value_translations"][target_style]
+                        )[untranslated_default]
+                    else:
+                        translated_default = untranslated_default
+                else:
+                    translated_default = untranslated_default
+                # breakpoint()
+                params[translated_key] = translated_default
+            else:
+                continue
+        return params
 
 
 class UParmaDict(dict):
