@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from distutils.core import setup
+from setuptools import setup
 import distutils
 from distutils.command.install_lib import install_lib
 import os
