@@ -68,6 +68,18 @@ test_data_list = [
             "precursor_mass_units": 0,
         },
     },
+    {
+        "source_style": "ursgal_style_1",
+        "target_style": "terminat0r_style_1",
+        "input_dict": {
+            "really?": "yes!",
+            "really, really?": "YEEEESS!",
+        },
+        "results": {
+            "really?": "yes!",
+            "really, really?": "YEEEESS!",
+        },
+    },
 ]
 
 

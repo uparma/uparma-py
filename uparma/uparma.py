@@ -2,7 +2,6 @@
 import requests
 import os
 import json
-import pprint
 from pathlib import Path
 
 import uparma
