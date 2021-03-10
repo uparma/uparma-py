@@ -196,7 +196,9 @@ class UParma(object):
                         if value in self.parameter2id[key]:
                             # parameter already found
                             raise ValueError(
-                                f"Duplicate parameter found: {key} - {value}"
+                                "Duplicate parameter found: {key} - {value}".format(
+                                    key=key, value=value
+                                )
                             )
                         else:
                             # add value = _id
