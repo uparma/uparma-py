@@ -4,6 +4,10 @@ import os
 import json
 from pathlib import Path
 
+import logging
+
+log = logging.getLogger(__name__)
+
 import uparma
 
 URLS = {
@@ -34,10 +38,35 @@ class UParma(object):
             same source style every time, in which case self.convert can be used
             instead of self.translate
 
+        parameter_data (dict): overwrite json loading with customized object
+            Should look like:
+                (
+                    "general",
+                    "parameters",
+                ): "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json",
+                (
+                    "general",
+                    "styles",
+                ): "https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/styles.json",
+
+            or alternatively, already in dict format:
+                (
+                    "general",
+                    "parameters",
+                ): [{"-id": ... }]
+                (
+                    "general",
+                    "styles",
+                ): [{"_id": ... }]
+
+
     """
 
     def __init__(
-        self, parameter_data=None, refresh_jsons=False, source_style="ursgal_style_1"
+        self,
+        refresh_jsons=False,
+        source_style="ursgal_style_1",
+        parameter_data=None,
     ):
         self.source_style = source_style
         self.jsons = {}
@@ -46,47 +75,34 @@ class UParma(object):
         self.available_styles = []
         self.parameters = {}
 
-        if parameter_data is not None:
-            for url_id, url in parameter_data.items():
-                loaded = self.load_data(identifier=url_id, data_source=url)
-
         for url_id, url in URLS.items():
-            if not url_id in self.jsons.keys() or self.jsons[url_id] is None:
-                # process missing data
-                if refresh_jsons is True:
-                    # load directly from URLs
-                    loaded = self.load_data(identifier=url_id, data_source=url)
-                else:
-                    # use local files if they exist
-                    for url_id, url in URLS.items():
-                        local_path = base_path.joinpath(Path(url).name)
-                        if local_path.exists():
-                            url = local_path
-                        loaded = self.load_data(identifier=url_id, data_source=url)
+            json_file_name = os.path.basename(url)
+            full_path = os.path.join(
+                os.path.dirname(uparma.uparma.__file__), json_file_name
+            )
+            if os.path.exists(full_path) is False:
+                refresh_jsons = True
+                # we will have to pull
 
-        # for url_id, url in URLS.items():
-        #     json_file_name = os.path.basename(url)
-        #     full_path = os.path.join(
-        #         os.path.dirname(uparma.uparma.__file__), json_file_name
-        #     )
-        #     if os.path.exists(full_path) is False:
-        #         refresh_jsons = True
-        #         # we will have to pull
-        #
-        #     if refresh_jsons is True:
-        #         with requests.get(url) as req:
-        #             with open(full_path, 'w') as j:
-        #                 print(
-        #                     json.dumps(
-        #                         req.json(),
-        #                         indent=2,
-        #                         sort_keys=True
-        #                     ), file=j
-        #                 )
-        #             self.jsons[url_id] = req.json()
-        #     else:
-        #         with open(full_path) as j:
-        #             self.jsons[url_id] = json.load(j)
+            if refresh_jsons is True:
+                with requests.get(url) as req:
+                    with open(full_path, "w") as j:
+                        print(json.dumps(req.json(), indent=2, sort_keys=True), file=j)
+                    self.jsons[url_id] = req.json()
+            else:
+                with open(full_path) as j:
+                    self.jsons[url_id] = json.load(j)
+
+        # Let's overwrite with custom
+        if parameter_data is not None:
+            if isinstance(parameter_data, dict) is False:
+                logging.warning("Parameter_Data needs is in wrong format")
+            else:
+                for key, value in parameter_data.items():
+                    if isinstance(value, list) is False:
+                        logging.warning("Require list of dicts for key {0}".format(key))
+                    else:
+                        self.jsons[key] = value
 
         self._parse_jsons()
 
@@ -103,7 +119,7 @@ class UParma(object):
         loaded = True
         # action depends on the type of data
         if isinstance(data_source, list):
-            # this is a preformatted dictionary no translation needed
+            # this is a preformatted dictionary
             self.jsons[identifier] = data_source
         elif isinstance(data_source, Path):
             # path object pointing to a json file
@@ -191,7 +207,7 @@ class UParma(object):
                     if isinstance(value, list):
                         value = ", ".join(value)
 
-                    if key in self.parameter2id:
+                    if key in self.parameter2id.keys():
 
                         # found key does value also exist
                         if value in self.parameter2id[key]:

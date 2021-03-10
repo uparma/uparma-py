@@ -3,11 +3,11 @@ import uparma
 import random
 import pytest
 
-jsons = {
-    ("general", "parameters"): "parameters.json",
-    ("general", "styles"): "styles.json",
-}
-up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
+# jsons = {
+#     ("general", "parameters"): "parameters.json",
+#     ("general", "styles"): "styles.json",
+# }
+up = uparma.UParma(refresh_jsons=True)
 
 # filter parameters to ones that can be sensibly used as reverse lookups
 param_w_value_trans = [
