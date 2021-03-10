@@ -297,7 +297,9 @@ class UParma(object):
                 template_dict.update(
                     {
                         "was_translated": False,
-                        "reason": f"Parameter {source_key} does not exist in {source_style}",
+                        "reason": "Parameter {source_key} does not exist in {source_style}".format(
+                            source_key=source_key, source_style=source_style
+                        ),
                     }
                 )
                 translated_params.details[source_key] = template_dict
@@ -312,7 +314,10 @@ class UParma(object):
                     template_dict.update(
                         {
                             "was_translated": False,
-                            "reason": f"Parameter {source_key} does not exist in {target_style}",
+                            "reason": "Parameter {source_key} does not exist in {target_style}".format(
+                                source_key=source_key,
+                                target_style=target_style,
+                            ),
                         }
                     )
                     translated_params.details[source_key] = template_dict
