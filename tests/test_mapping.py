@@ -1,5 +1,6 @@
 import uparma
 import pytest
+import pprint
 
 param = [
     {
@@ -55,17 +56,29 @@ test_data_list = [
         "input_dict": {"precursor_mass_tolerance_unit": "ppm"},
         "results": {"PPMTolerance": "ppm"},
     },
+    {
+        "source_style": "ursgal_style_1",
+        "target_style": "moda_style_1",
+        "input_dict": {
+            "precursor_mass_tolerance_unit": "ppm",
+            "precursor_mass_units": 0,
+        },
+        "results": {
+            "PPMTolerance": "ppm",
+            "precursor_mass_units": 0,
+        },
+    },
 ]
 
 
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_mapping(test_dict):
     up.source_style = test_dict["source_style"]
-    msgf_params = up.translate(
+    pprint.pprint(test_dict)
+    translated_params = up.translate(
         test_dict["input_dict"],
         source_style=test_dict["source_style"],
         target_style=test_dict["target_style"],
     )
 
-    assert msgf_params == test_dict["results"]
-
+    assert sorted(translated_params.items()) == sorted(test_dict["results"].items())

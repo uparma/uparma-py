@@ -2,8 +2,10 @@
 import requests
 import os
 import json
-import uparma
+import pprint
 from pathlib import Path
+
+import uparma
 
 URLS = {
     (
@@ -276,62 +278,93 @@ class UParma(object):
 
         translated_params = UParmaDict()
         for param_name, param_value in param_dict.items():
+            source_key = param_name
+            source_value = param_value
 
-            _id = self.parameter2id[source_style].get(param_name, None)
-
-            if _id is None:
-                translated_key = cannot_be_translated.format(
-                    "Key", param_name, target_style
-                )
-            else:
-                translated_key = self.parameters[_id]["key_translations"][target_style]
-
-            parameter_data = self.parameters[_id]
-            source_translations = parameter_data["value_translations"].get(
-                source_style, None
-            )
-            target_translations = parameter_data["value_translations"].get(
-                target_style, None
-            )
-
-            # convert param_value with source value_translations
-            source_value = None
-            if source_translations is None:
-                # no translator so keep value
-                source_value = param_value
-            else:
-                for key, value in source_translations:
-                    if value == param_value:
-                        source_value = key
-                        break
-                if source_value is None:
-                    source_value = param_value
-
-            target_value = None
-            if target_translations is None:
-                # no translator so keep value
-                target_value = source_value
-            else:
-                mapped = False
-                for key, value in target_translations:
-                    if key == source_value:
-                        target_value = value
-                        mapped = True
-                        break
-
-                if mapped is False and target_value is None:
-                    target_value = source_value
-
-            translated_params.details[param_name] = {
-                "source_value": param_value,
-                "source_key": param_name,
+            template_dict = {
                 "source_style": source_style,
-                "target_key": translated_key,
-                "target_value": target_value,
+                "source_key": source_key,
+                "source_value": source_value,
+                # ========================
                 "target_style": target_style,
+                "target_key": source_key,  # not translated
+                "target_value": source_value,  # not translated
             }
 
-            translated_params[translated_key] = target_value
+            _id = self.parameter2id[source_style].get(source_key, None)
+
+            if _id is None:
+                translated_params[source_key] = source_value
+                template_dict.update(
+                    {
+                        "was_translated": False,
+                        "reason": f"Parameter {source_key} does not exist in {source_style}",
+                    }
+                )
+                translated_params.details[source_key] = template_dict
+
+            else:
+                translated_key = self.parameters[_id]["key_translations"].get(
+                    target_style,
+                    None,
+                )
+                if translated_key is None:
+                    translated_params[source_key] = source_value
+                    template_dict.update(
+                        {
+                            "was_translated": False,
+                            "reason": f"Parameter {source_key} does not exist in {target_style}",
+                        }
+                    )
+                    translated_params.details[source_key] = template_dict
+                else:
+
+                    parameter_data = self.parameters[_id]
+                    source_translations = parameter_data["value_translations"].get(
+                        source_style, None
+                    )
+                    target_translations = parameter_data["value_translations"].get(
+                        target_style, None
+                    )
+
+                    # convert param_value with source value_translations
+                    source_value = None
+                    if source_translations is None:
+                        # no translator so keep value
+                        source_value = param_value
+                    else:
+                        for key, value in source_translations:
+                            if value == param_value:
+                                source_value = key
+                                break
+                        if source_value is None:
+                            source_value = param_value
+
+                    target_value = None
+                    if target_translations is None:
+                        # no translator so keep value
+                        target_value = source_value
+                    else:
+                        mapped = False
+                        for key, value in target_translations:
+                            if key == source_value:
+                                target_value = value
+                                mapped = True
+                                break
+
+                        if mapped is False and target_value is None:
+                            target_value = source_value
+
+                    template_dict.update(
+                        {
+                            "target_key": translated_key,
+                            "target_value": target_value,
+                            "target_style": target_style,
+                            "was_translated": True,
+                        }
+                    )
+                    translated_params.details[source_key] = template_dict
+                    translated_params[translated_key] = target_value
 
         return translated_params
 
