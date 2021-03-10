@@ -186,12 +186,13 @@ class UParma(object):
             for uparma_entry in self.jsons[url_id]:
                 _id = uparma_entry["_id"]
                 self.parameters[_id] = uparma_entry
-
                 for key, value in uparma_entry["key_translations"].items():
+
                     if isinstance(value, list):
                         value = ", ".join(value)
 
                     if key in self.parameter2id:
+
                         # found key does value also exist
                         if value in self.parameter2id[key]:
                             # parameter already found
@@ -206,6 +207,8 @@ class UParma(object):
                     else:
                         self.parameter2id[key] = {value: _id}
                         self.available_styles.append(key)
+
+        return
 
     def convert(self, param_dict, target_style=None):
         """
@@ -281,7 +284,6 @@ class UParma(object):
         for param_name, param_value in param_dict.items():
             source_key = param_name
             source_value = param_value
-
             template_dict = {
                 "source_style": source_style,
                 "source_key": source_key,
