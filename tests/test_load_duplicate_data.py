@@ -31,7 +31,7 @@ test_data_list = [
 
 
 @pytest.mark.parametrize("test_dict", test_data_list)
-def test_load_data(test_dict):
+def test_load_duplicated_data(test_dict):
     with pytest.raises(ValueError) as err:
         up = uparma.UParma(refresh_jsons=False, parameter_data=test_dict["input"])
 

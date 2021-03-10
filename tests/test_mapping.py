@@ -28,26 +28,26 @@ test_data_list = [
             "-he": 2.3,
         },
     },
-    {
-        "source_style": "ursgal_style_1",
-        "target_style": "omssa_style_1",
-        "input_dict": {
-            "max_num_of_ions_per_series_to_search": 0,
-        },
-        "results": {
-            "-sp": "all",
-        },
-    },
-    {
-        "target_style": "ursgal_style_1",
-        "source_style": "omssa_style_1",
-        "input_dict": {
-            "-sp": "all",
-        },
-        "results": {
-            "max_num_of_ions_per_series_to_search": 0,
-        },
-    },
+    # {
+    #     "source_style": "ursgal_style_1",
+    #     "target_style": "omssa_style_1",
+    #     "input_dict": {
+    #         "max_num_of_ions_per_series_to_search": 0,
+    #     },
+    #     "results": {
+    #         "-sp": "all",
+    #     },
+    # },
+    # {
+    #     "target_style": "ursgal_style_1",
+    #     "source_style": "omssa_style_1",
+    #     "input_dict": {
+    #         "-sp": "all",
+    #     },
+    #     "results": {
+    #         "max_num_of_ions_per_series_to_search": 0,
+    #     },
+    # },
 ]
 
 

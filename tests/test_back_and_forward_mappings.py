@@ -7,7 +7,7 @@ import pytest
 #     ("general", "parameters"): "parameters.json",
 #     ("general", "styles"): "styles.json",
 # }
-up = uparma.UParma(refresh_jsons=True)
+up = uparma.UParma()
 
 # filter parameters to ones that can be sensibly used as reverse lookups
 param_w_value_trans = [
