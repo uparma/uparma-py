@@ -398,7 +398,6 @@ class UParma(object):
 
         params_that_trigger_rerun = []
         for param_name in params.keys():
-            # breakpoint()
             _id = self.parameter2id[source_style].get(param_name, None)
             if self.parameters[_id].get("triggers_rerun", False) is True:
                 params_that_trigger_rerun.append(param_name)
@@ -415,7 +414,6 @@ class UParma(object):
             dict: Description of returned object.
 
         """
-        # breakpoint()
         params = {}
         for key, value in self.parameters.items():
             if (
@@ -426,8 +424,6 @@ class UParma(object):
                     continue
                 if "value_translations" in value:
                     if target_style in value["value_translations"]:
-                        # breakpoint()
-                        # print(untranslated_default)
                         translated_default = dict(
                             value["value_translations"][target_style]
                         )[untranslated_default]
