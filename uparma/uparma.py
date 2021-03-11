@@ -347,7 +347,7 @@ class UParma(object):
 
         return params_that_trigger_rerun
 
-    def get_default_params_for_style(self, target_style):
+    def get_default_params(self, target_style):
         """Short summary.
 
         Args:
