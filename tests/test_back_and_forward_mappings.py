@@ -3,15 +3,19 @@ import uparma
 import random
 import pytest
 
-jsons = {
-    ("general", "parameters"): "parameters.json",
-    ("general", "styles"): "styles.json",
-}
-up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
+# jsons = {
+#     ("general", "parameters"): "parameters.json",
+#     ("general", "styles"): "styles.json",
+# }
+up = uparma.UParma()
 
 # filter parameters to ones that can be sensibly used as reverse lookups
-param_w_value_trans = [x for x in up.parameters if len(up.parameters[x]["value_translations"]) > 0]
-param_wone = [x for x in up.parameters if len(up.parameters[x]["value_translations"]) == 1]
+param_w_value_trans = [
+    x for x in up.parameters if len(up.parameters[x]["value_translations"]) > 0
+]
+param_wone = [
+    x for x in up.parameters if len(up.parameters[x]["value_translations"]) == 1
+]
 test_data_list = []
 for test_id in param_w_value_trans:
     use_to_test = True
@@ -30,6 +34,7 @@ for test_id in param_w_value_trans:
 
 # test_data_list = [146]
 
+
 @pytest.mark.parametrize("test_id", test_data_list)
 def test_simple_back_and_forward_mapping(test_id):
     param_dict = up.parameters[test_id]
@@ -41,11 +46,11 @@ def test_simple_back_and_forward_mapping(test_id):
                 continue
 
             if source_style == target_style:
-                # skip tranlations of a style to itself
+                # skip translations of a style to itself
                 continue
 
             print()
-            print(source_style, target_style)
+            print("Translating", source_style, "to", target_style)
 
             translations = param_dict["value_translations"].get(source_style, None)
 
@@ -55,21 +60,15 @@ def test_simple_back_and_forward_mapping(test_id):
                 values = [x[1] for x in translations]
 
             for value in values:
-                original_dict = {
-                    param_dict["key_translations"][source_style]: value
-                }
+                original_dict = {param_dict["key_translations"][source_style]: value}
 
-                print('original_dict', original_dict)
+                print("original_dict", original_dict)
                 forward_mapping = up.translate(
-                    original_dict,
-                    source_style=source_style,
-                    target_style=target_style
+                    original_dict, source_style=source_style, target_style=target_style
                 )
-                print('forward_mapping', forward_mapping)
+                print("forward_mapping", forward_mapping)
                 retour_mapping = up.translate(
-                    forward_mapping,
-                    source_style=target_style,
-                    target_style=source_style
+                    forward_mapping, source_style=target_style, target_style=source_style
                 )
-                print('retour_mapping', retour_mapping)
+                print("retour_mapping", retour_mapping)
                 assert retour_mapping == original_dict

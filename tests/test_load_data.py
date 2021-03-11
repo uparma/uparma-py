@@ -4,99 +4,35 @@ import json
 import os
 from pathlib import Path
 
-jsons = {
-    ("general", "parameters"): "parameters.json",
-    ("general", "styles"): "styles.json",
-}
-up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
 
-
-test_data = [
-    {
-        "_id": 1,
-        "name": "experiment_setup",
-        "description": " ",
-        "default_value": [],
-        "value_type": "list",
-        "tag": ["quantification"],
-        "value_translations": {},
-        "key_translations": {
-            "ursgal_style_1": "experiment_setup",
-            "flash_lfq_style_1": "experiment_setup",
-        },
-    }
-]
 test_data_list = [
     {
         "input": {
-            # "data_source": f"https://{Path(__file__).parent.joinpath('parameters.json').as_posix()}",
-            "data_source": "https://raw.githubusercontent.com/uparma/uparma-lib/feature/new_params/jsons/parameters.json",
-            "identifier": ("general", "parameters"),
+            ("general", "parameters"): [
+                {
+                    "_id": 1,
+                    "name": "Luke",
+                    "key_translations": {
+                        "ursgal_style_1": "The force is strong in this o->",
+                    },
+                },
+                {
+                    "_id": 2,
+                    "name": "Leia",
+                    "key_translations": {
+                        "ursgal_style_1": "The force is strong in this o+",
+                        "ze_other": "...",
+                    },
+                },
+            ]
         },
-        "results": {
-            "size": 361,
-            "names": [
-                "experiment_setup",
-                "isotopic_distribution_tolerance",
-                "normalize_intensities",
-                "integrate_peak_areas",
-                "only_precursor_charge",
-                "match_between_runs",
-            ],
-        },
-    },
-    {
-        "input": {"data_source": "rubbish", "identifier": ("general", "parameters")},
-        "results": None,
-    },
-    {
-        "input": {"data_source": test_data, "identifier": ("general", "parameters")},
-        "results": {"size": 1, "names": ["experiment_setup"]},
-    },
-    {
-        "input": {
-            "data_source": json.dumps(test_data),
-            "identifier": ("general", "parameters"),
-        },
-        "results": {"size": 1, "names": ["experiment_setup"]},
-    },
-    {
-        "input": {
-            "data_source": Path("tests/parameters.json"),
-            "identifier": ("general", "parameters"),
-        },
-        "results": {
-            "size": 2,
-            "names": ["experiment_setup", "isotopic_distribution_tolerance"],
-        },
-    },
-    {
-        "input": {
-            "data_source": "tests/parameters.json",
-            "identifier": ("general", "parameters"),
-        },
-        "results": {
-            "size": 2,
-            "names": ["experiment_setup", "isotopic_distribution_tolerance"],
-        },
-    },
+    }
 ]
 
 
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_load_data(test_dict):
-    param = test_dict["input"]
-    loaded = up.load_data(
-        identifier=param["identifier"], data_source=param["data_source"]
-    )
-
-    results = test_dict["results"]
-    if results is None:
-        assert loaded is False
-        assert up.jsons[param["identifier"]] is None
-    else:
-        assert loaded is True
-        assert len(up.jsons[param["identifier"]]) == results["size"]
-
-        for idx, name in enumerate(results["names"]):
-            assert up.jsons[param["identifier"]][idx]["name"] == name
+    up = uparma.UParma(refresh_jsons=False, parameter_data=test_dict["input"])
+    assert len(up.available_styles) == 2
+    assert len(up.parameter2id.keys()) == 2
+    assert list(up.parameters.keys()) == [1, 2]
