@@ -45,6 +45,6 @@ up._parse_jsons()
 
 
 def test_get_default_parameters():
-    default_params = up.get_default_params_for_style("msfragger_style_3")
+    default_params = up.get_default_params("msfragger_style_3")
     assert default_params["precursor_mass_units"] == 1
     assert default_params["precursor_mass_lower"] == 5
