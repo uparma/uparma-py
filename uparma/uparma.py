@@ -106,79 +106,6 @@ class UParma(object):
 
         self._parse_jsons()
 
-    # def load_data(self, identifier=None, data_source=None):
-    #     """
-
-    #     Args:
-    #         identifier: (tuple) for indexing the data_source
-    #         data_source:  can be a url to json file or file path or json string
-
-    #     Returns:
-
-    #     """
-    #     loaded = True
-    #     # action depends on the type of data
-    #     if isinstance(data_source, list):
-    #         # this is a preformatted dictionary
-    #         self.jsons[identifier] = data_source
-    #     elif isinstance(data_source, Path):
-    #         # path object pointing to a json file
-    #         if data_source.exists():
-    #             # this is a path string to a valid file
-    #             with open(str(data_source)) as j:
-    #                 self.jsons[identifier] = json.load(j)
-    #         else:
-    #             # this is a url
-    #             pass
-    #     elif isinstance(data_source, str):
-    #         # data_source could be many things
-
-    #         # url or file path
-    #         fp = Path(data_source)
-
-    #         try:
-    #             if fp.exists():
-    #                 # path as given exists
-    #                 file_exists = True
-    #             else:
-    #                 # try using uparma location as parent
-    #                 fp = base_path.parent.joinpath(fp.name)
-    #                 if fp.exists():
-    #                     # local file exists
-    #                     file_exists = True
-    #                 else:
-    #                     file_exists = False
-    #         except OSError:
-    #             file_exists = False
-
-    #         try:
-    #             # if jason string parser will not fail
-    #             parsed = json.loads(data_source)
-    #         except json.JSONDecodeError:
-    #             # not json string
-    #             parsed = None
-
-    #         if file_exists is True:
-    #             # string is a filepath
-    #             with open(str(fp)) as j:
-    #                 self.jsons[identifier] = json.load(j)
-    #         elif parsed is not None:
-    #             # string translated as json
-    #             self.jsons[identifier] = parsed
-    #         else:
-    #             # could be url
-    #             try:
-    #                 with requests.get(data_source) as req:
-    #                     self.jsons[identifier] = req.json()
-    #             except:
-    #                 self.jsons[identifier] = None
-    #                 loaded = False
-    #     else:
-    #         self.jsons[identifier] = None
-    #         loaded = False
-
-    #     return loaded
-
     def _parse_jsons(self):
         """
         Parse and prepare jsons into internal structure in the form of::
@@ -399,6 +326,8 @@ class UParma(object):
         params_that_trigger_rerun = []
         for param_name in params.keys():
             _id = self.parameter2id[source_style].get(param_name, None)
+            if _id is None:
+                continue
             if self.parameters[_id].get("triggers_rerun", False) is True:
                 params_that_trigger_rerun.append(param_name)
 

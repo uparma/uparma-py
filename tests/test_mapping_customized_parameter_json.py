@@ -29,13 +29,12 @@ param = [
     }
 ]
 
-jsons = {
-    ("general", "parameters"): "parameters.json",
-    ("general", "styles"): "styles.json",
-}
-up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
-up.jsons[("general", "parameters")] = param
-up._parse_jsons()
+up = uparma.UParma(
+    refresh_jsons=False,
+    parameter_data={
+        ("general", "parameters"): param,
+    },
+)
 
 test_data_list = [
     {
