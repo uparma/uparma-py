@@ -30,11 +30,21 @@ test_data_list = [
                     "_id": 2,
                     "name": "precursor_mass_tolerance",
                     "description": "Precursor mass tolerance",
-                    "default_value": "5",
+                    "default_value": 5,
                     "value_type": "select",
                     "tag": ["accuracy", "precursor"],
                     "key_translations": {
                         "msfragger_style_3": "precursor_mass_lower",
+                    },
+                },
+                {
+                    "_id": 3,
+                    "name": "database",
+                    "description": "Precursor mass tolerance",
+                    "default_value": None,
+                    "tag": ["accuracy", "precursor"],
+                    "key_translations": {
+                        "msfragger_style_3": "database_name",
                     },
                 },
             ]
@@ -50,3 +60,4 @@ def test_identify_params_trigger_rerun(test_dict):
     default_params = up.get_default_params("msfragger_style_3")
     assert default_params["precursor_mass_units"] == 1
     assert default_params["precursor_mass_lower"] == 5
+    assert default_params["database_name"] is None
