@@ -416,9 +416,8 @@ class UParma(object):
         """
         params = {}
         for key, value in self.parameters.items():
-            if (
-                translated_key := value["key_translations"].get(target_style, None)
-            ) is not None:
+            translated_key = value["key_translations"].get(target_style, None)
+            if translated_key is not None:
                 untranslated_default = value["default_value"]
                 if untranslated_default is None:
                     continue
