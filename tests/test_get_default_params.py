@@ -55,9 +55,37 @@ test_data_list = [
 
 
 @pytest.mark.parametrize("test_dict", test_data_list)
-def test_identify_params_trigger_rerun(test_dict):
+def test_get_default_params(test_dict):
     up = uparma.UParma(refresh_jsons=False, parameter_data=test_dict["input"])
     default_params = up.get_default_params("msfragger_style_3")
     assert default_params["precursor_mass_units"] == 1
     assert default_params["precursor_mass_lower"] == 5
     assert default_params["database_name"] is None
+
+
+def test_get_default_params_with_list_of_keys():
+    d = {
+        "input": {
+            ("general", "parameters"): [
+                {
+                    "_id": 135,
+                    "default_value": "14N",
+                    "description": "15N if the corresponding amino acid labeling was applied",
+                    "key_translations": {
+                        "myrimatch_style_1": "label",
+                        "omssa_style_1": ["-tem", "-tom"],
+                        "pipi_style_1": "15N",
+                    },
+                    "name": "label",
+                    "tag": ["label", "modifications"],
+                    "triggers_rerun": True,
+                    "value_translations": {"pipi_style_1": [["14N", 0], ["15N", 1]]},
+                    "value_type": "select",
+                },
+            ]
+        }
+    }
+    up = uparma.UParma(refresh_jsons=False, parameter_data=d["input"])
+    default_params = up.get_default_params("omssa_style_1")
+    assert default_params["-tem"] == "14N"
+    assert default_params["-tom"] == "15N"
