@@ -18,7 +18,7 @@ with open(version_path, 'r') as version_file:
 
 
 setup(
-    name='uparma-py',
+    name='uparma',
     version = uparma_py_version,
     packages = ['uparma'],
     package_dir = {'uparma': 'uparma'},
