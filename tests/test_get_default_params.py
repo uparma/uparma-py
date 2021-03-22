@@ -87,5 +87,4 @@ def test_get_default_params_with_list_of_keys():
     }
     up = uparma.UParma(refresh_jsons=False, parameter_data=d["input"])
     default_params = up.get_default_params("omssa_style_1")
-    assert default_params["-tem"] == "14N"
-    assert default_params["-tom"] == "15N"
+    assert default_params[("-tem", "-tom")] == "14N"
