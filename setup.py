@@ -18,7 +18,7 @@ with open(version_path, 'r') as version_file:
 
 
 setup(
-    name='uparma-py',
+    name='uparma',
     version = uparma_py_version,
     packages = ['uparma'],
     package_dir = {'uparma': 'uparma'},
@@ -37,7 +37,6 @@ setup(
     classifiers = [
         'Development Status :: 4 - Beta',
         'Environment :: Console',
-        'Intended Audience :: Education',
         'Intended Audience :: Science/Research',
         'Intended Audience :: Developers',
         'Operating System :: MacOS :: MacOS X',
@@ -50,7 +49,6 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Chemistry',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
-        'Topic :: Scientific/Engineering :: Education',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]
 )

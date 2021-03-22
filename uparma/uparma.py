@@ -392,23 +392,27 @@ class UParma(object):
 
         return translated_params
 
-    def identify_parameters_triggering_rerun(self, params, source_style=None):
-        if source_style is None:
-            source_style = self.source_style
-
+    def identify_parameters_triggering_rerun(self, params, style=None):
+        if style is None:
+            style = self.source_style
         params_that_trigger_rerun = []
         for param_name in params.keys():
-            _id = self.parameter2id[source_style].get(param_name, None)
-            if self.parameters[_id].get("triggers_rerun", False) is True:
-                params_that_trigger_rerun.append(param_name)
+            if style not in self.parameter2id.keys():
+                continue
+            _id = self.parameter2id[style].get(param_name, None)
+            if _id is not None:
+                if self.parameters[_id].get("triggers_rerun", False) is True:
+                    params_that_trigger_rerun.append(param_name)
 
         return params_that_trigger_rerun
 
-    def get_default_params(self, target_style):
-        """Fetch translated default params for a given style.
+
+      
+    def get_default_params(self, style=None):
+        """Fetch translated default params for a given style1.
 
         Args:
-            target_style (str): Translation style, e.g. msfragger_style_3.
+            style (str): Translation style, e.g. msfragger_style_3.
 
         Returns:
             dict: Dict with translated key and translated default value for
@@ -417,7 +421,7 @@ class UParma(object):
         """
         params = {}
         for key, value in self.parameters.items():
-            translated_key = value["key_translations"].get(target_style, None)
+            translated_key = value["key_translations"].get(style, None)
             if isinstance(translated_key, list) is True:
                 translated_key = tuple(translated_key)
             if translated_key is not None:
@@ -426,12 +430,12 @@ class UParma(object):
                     "value_translations" in value
                     and len(value["value_translations"]) > 0
                 ):
-                    if target_style in value["value_translations"]:
+                    if style in value["value_translations"]:
                         translated_default = dict(
-                            value["value_translations"][target_style]
+                            value["value_translations"][style]
                         ).get(
                             untranslated_default,
-                            dict(value["value_translations"][target_style]),
+                            dict(value["value_translations"][style]),
                         )
                     else:
                         translated_default = untranslated_default

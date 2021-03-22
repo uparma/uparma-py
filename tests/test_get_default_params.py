@@ -57,7 +57,7 @@ test_data_list = [
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_get_default_params(test_dict):
     up = uparma.UParma(refresh_jsons=False, parameter_data=test_dict["input"])
-    default_params = up.get_default_params("msfragger_style_3")
+    default_params = up.get_default_params(style="msfragger_style_3")
     assert default_params["precursor_mass_units"] == 1
     assert default_params["precursor_mass_lower"] == 5
     assert default_params["database_name"] is None
