@@ -406,6 +406,8 @@ class UParma(object):
 
         return params_that_trigger_rerun
 
+
+      
     def get_default_params(self, style=None):
         """Fetch translated default params for a given style1.
 
@@ -413,12 +415,15 @@ class UParma(object):
             style (str): Translation style, e.g. msfragger_style_3.
 
         Returns:
-            dict: Dict with translated key and translated default value for the given style.
+            dict: Dict with translated key and translated default value for
+                the given style.
 
         """
         params = {}
         for key, value in self.parameters.items():
             translated_key = value["key_translations"].get(style, None)
+            if isinstance(translated_key, list) is True:
+                translated_key = tuple(translated_key)
             if translated_key is not None:
                 untranslated_default = value["default_value"]
                 if (
