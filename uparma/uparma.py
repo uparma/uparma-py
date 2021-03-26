@@ -329,6 +329,8 @@ class UParma(object):
                     target_style,
                     None,
                 )
+                if isinstance(translated_key, list) is True:
+                    translated_key = tuple(translated_key)
                 if translated_key is None:
                     translated_params[source_key] = source_value
                     template_dict.update(
@@ -406,8 +408,6 @@ class UParma(object):
 
         return params_that_trigger_rerun
 
-
-      
     def get_default_params(self, style=None):
         """Fetch translated default params for a given style1.
 
