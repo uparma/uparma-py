@@ -389,10 +389,9 @@ class UParma(object):
                             "was_translated": True,
                         }
                     )
-                    translated_params.details[source_key] = template_dict
-                    translated_params[translated_key] = target_value
-                    translated_params[source_key] = template_dict
+                    # translated_params.details[source_key] = template_dict
                     # translated_params[translated_key] = target_value
+                    translated_params[source_key] = template_dict
 
         return translated_params
 
@@ -410,7 +409,7 @@ class UParma(object):
 
         return params_that_trigger_rerun
 
-    def get_default_params(self, style=None):
+    def get_default_params(self, style=None, source_style="ursgal_style_1"):
         """Fetch translated default params for a given style1.
 
         Args:
@@ -424,9 +423,12 @@ class UParma(object):
         params = {}
         for key, value in self.parameters.items():
             translated_key = value["key_translations"].get(style, None)
+            name = value["name"]
             if isinstance(translated_key, list) is True:
                 translated_key = tuple(translated_key)
-            if translated_key is not None:
+            if translated_key is None:
+                continue
+            else:
                 untranslated_default = value["default_value"]
                 if (
                     "value_translations" in value
@@ -443,9 +445,10 @@ class UParma(object):
                         translated_default = untranslated_default
                 else:
                     translated_default = untranslated_default
-                params[translated_key] = translated_default
-            else:
-                continue
+                params[name] = {
+                    "target_key" : translated_key,
+                    "target_value" : translated_default
+                }
         return params
 
 
