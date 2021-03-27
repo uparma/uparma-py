@@ -391,6 +391,8 @@ class UParma(object):
                     )
                     translated_params.details[source_key] = template_dict
                     translated_params[translated_key] = target_value
+                    translated_params[source_key] = template_dict
+                    # translated_params[translated_key] = target_value
 
         return translated_params
 
