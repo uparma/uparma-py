@@ -42,8 +42,6 @@ def test_simple_back_and_forward_mapping(test_id):
         if isinstance(param_dict["key_translations"][source_style], list):
             continue
         for target_style in param_dict["key_translations"]:
-            if isinstance(param_dict["key_translations"][target_style], list):
-                continue
 
             if source_style == target_style:
                 # skip translations of a style to itself
@@ -64,11 +62,21 @@ def test_simple_back_and_forward_mapping(test_id):
 
                 print("original_dict", original_dict)
                 forward_mapping = up.translate(
-                    original_dict, source_style=source_style, target_style=target_style
+                    original_dict,
+                    original_style=source_style,
+                    translated_style=target_style,
                 )
-                print("forward_mapping", forward_mapping)
+                new_input = {}
+                for k, v in forward_mapping.items():
+                    new_input[v["translated_key"]] = v["translated_value"]
+                print("Reformatted forward_mapping", new_input)
+
                 retour_mapping = up.translate(
-                    forward_mapping, source_style=target_style, target_style=source_style
+                    new_input, original_style=target_style, translated_style=source_style
                 )
-                print("retour_mapping", retour_mapping)
-                assert retour_mapping == original_dict
+                retour = {}
+                for k, v in retour_mapping.items():
+                    retour[v["translated_key"]] = v["translated_value"]
+
+                print("Reformatted retour", retour)
+                assert retour == original_dict

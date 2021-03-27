@@ -34,7 +34,7 @@ class UParma(object):
             Note that if jsons are not available in uparma folder, option is
             overridden and set to True.
 
-        source_style (str): Convenience when mapper is used to map from the
+        original_style (str): Convenience when mapper is used to map from the
             same source style every time, in which case self.convert can be used
             instead of self.translate
 
@@ -65,10 +65,10 @@ class UParma(object):
     def __init__(
         self,
         refresh_jsons=False,
-        source_style="ursgal_style_1",
+        original_style="ursgal_style_1",
         parameter_data=None,
     ):
-        self.source_style = source_style
+        self.original_style = original_style
         self.jsons = {}
         self.parameter2id = {}
         self.parameter2id_list = {}
@@ -106,79 +106,6 @@ class UParma(object):
 
         self._parse_jsons()
 
-    # def load_data(self, identifier=None, data_source=None):
-    #     """
-
-    #     Args:
-    #         identifier: (tuple) for indexing the data_source
-    #         data_source:  can be a url to json file or file path or json string
-
-    #     Returns:
-
-    #     """
-    #     loaded = True
-    #     # action depends on the type of data
-    #     if isinstance(data_source, list):
-    #         # this is a preformatted dictionary
-    #         self.jsons[identifier] = data_source
-    #     elif isinstance(data_source, Path):
-    #         # path object pointing to a json file
-    #         if data_source.exists():
-    #             # this is a path string to a valid file
-    #             with open(str(data_source)) as j:
-    #                 self.jsons[identifier] = json.load(j)
-    #         else:
-    #             # this is a url
-    #             pass
-    #     elif isinstance(data_source, str):
-    #         # data_source could be many things
-
-    #         # url or file path
-    #         fp = Path(data_source)
-
-    #         try:
-    #             if fp.exists():
-    #                 # path as given exists
-    #                 file_exists = True
-    #             else:
-    #                 # try using uparma location as parent
-    #                 fp = base_path.parent.joinpath(fp.name)
-    #                 if fp.exists():
-    #                     # local file exists
-    #                     file_exists = True
-    #                 else:
-    #                     file_exists = False
-    #         except OSError:
-    #             file_exists = False
-
-    #         try:
-    #             # if jason string parser will not fail
-    #             parsed = json.loads(data_source)
-    #         except json.JSONDecodeError:
-    #             # not json string
-    #             parsed = None
-
-    #         if file_exists is True:
-    #             # string is a filepath
-    #             with open(str(fp)) as j:
-    #                 self.jsons[identifier] = json.load(j)
-    #         elif parsed is not None:
-    #             # string translated as json
-    #             self.jsons[identifier] = parsed
-    #         else:
-    #             # could be url
-    #             try:
-    #                 with requests.get(data_source) as req:
-    #                     self.jsons[identifier] = req.json()
-    #             except:
-    #                 self.jsons[identifier] = None
-    #                 loaded = False
-    #     else:
-    #         self.jsons[identifier] = None
-    #         loaded = False
-
-    #     return loaded
-
     def _parse_jsons(self):
         """
         Parse and prepare jsons into internal structure in the form of::
@@ -205,7 +132,7 @@ class UParma(object):
                 for key, value in uparma_entry["key_translations"].items():
 
                     if isinstance(value, list):
-                        value = ", ".join(value)
+                        value = tuple(value)
 
                     if key in self.parameter2id.keys():
 
@@ -226,18 +153,20 @@ class UParma(object):
 
         return
 
-    def convert(self, param_dict, target_style=None):
+    def convert(self, param_dict, translated_style=None):
         """
         Convenient wrapper to translate params with the source style defined
         during init.
 
-        Calls self.translate with source_style = self.source_style
+        Calls self.translate with original_style = self.original_style
         """
         return self.translate(
-            param_dict, source_style=self.source_style, target_style=target_style
+            param_dict,
+            original_style=self.original_style,
+            translated_style=translated_style,
         )
 
-    def translate(self, param_dict, source_style=None, target_style=None):
+    def translate(self, param_dict, original_style=None, translated_style=None):
         """
         Translate param_dict from source style into target style.
 
@@ -246,9 +175,9 @@ class UParma(object):
             param_dict (dict): dict containing parameter and value in a given
                 style
 
-            source_style (str): style of the input format
+            original_style (str): style of the input format
 
-            target_style (str): style to which the parameters should be
+            translated_style (str): style to which the parameters should be
                 translated to.
 
         Returns:
@@ -276,20 +205,20 @@ class UParma(object):
 
             {
                 'min_pep_length': {
-                    'source_key': 'min_pep_length',
-                    'source_style': 'ursgal_style_1',
-                    'source_value': 8,
-                    'target_key': '-minLength',
-                    'target_style': 'msgfplus_style_1',
-                    'target_value': 8
+                    'original_key': 'min_pep_length',
+                    'original_style': 'ursgal_style_1',
+                    'original_value': 8,
+                    'translated_key': '-minLength',
+                    'translated_style': 'msgfplus_style_1',
+                    'translated_value': 8
                 },
                 'precursor_mass_tolerance_unit': {
-                    'source_key': 'precursor_mass_tolerance_unit',
-                   'source_style': 'ursgal_style_1',
-                   'source_value': 'da',
-                   'target_key': '-t',
-                   'target_style': 'msgfplus_style_1',
-                   'target_value': 'Da'
+                    'original_key': 'precursor_mass_tolerance_unit',
+                   'original_style': 'ursgal_style_1',
+                   'original_value': 'da',
+                   'translated_key': '-t',
+                   'translated_style': 'msgfplus_style_1',
+                   'translated_value': 'Da'
                 }
             }
 
@@ -298,106 +227,104 @@ class UParma(object):
 
         translated_params = UParmaDict()
         for param_name, param_value in param_dict.items():
-            source_key = param_name
-            source_value = param_value
+            original_key = param_name
+            original_value = param_value
             template_dict = {
-                "source_style": source_style,
-                "source_key": source_key,
-                "source_value": source_value,
+                "original_style": original_style,
+                "original_key": original_key,
+                "original_value": original_value,
                 # ========================
-                "target_style": target_style,
-                "target_key": source_key,  # not translated
-                "target_value": source_value,  # not translated
+                "translated_style": translated_style,
+                "translated_key": original_key,  # not translated
+                "translated_value": original_value,  # not translated
             }
 
-            _id = self.parameter2id[source_style].get(source_key, None)
-
+            _id = self.parameter2id[original_style].get(original_key, None)
             if _id is None:
-                translated_params[source_key] = source_value
+                translated_params[original_key] = original_value
                 template_dict.update(
                     {
                         "was_translated": False,
-                        "reason": "Parameter {source_key} does not exist in {source_style}".format(
-                            source_key=source_key, source_style=source_style
+                        "reason": "Parameter {original_key} does not exist in {original_style}".format(
+                            original_key=original_key, original_style=original_style
                         ),
                     }
                 )
-                translated_params.details[source_key] = template_dict
-
+                _name = original_key
             else:
+                _name = self.parameters[_id].get("name", None)
+                if _name is None:
+                    raise TypeError(f"id {_id} has no name! Contact uparma team!")
                 translated_key = self.parameters[_id]["key_translations"].get(
-                    target_style,
+                    translated_style,
                     None,
                 )
                 if isinstance(translated_key, list) is True:
                     translated_key = tuple(translated_key)
                 if translated_key is None:
-                    translated_params[source_key] = source_value
+                    translated_params[original_key] = original_value
                     template_dict.update(
                         {
                             "was_translated": False,
-                            "reason": "Parameter {source_key} does not exist in {target_style}".format(
-                                source_key=source_key,
-                                target_style=target_style,
+                            "reason": "Parameter {original_key} does not exist in {translated_style}".format(
+                                original_key=original_key,
+                                translated_style=translated_style,
                             ),
                         }
                     )
-                    translated_params.details[source_key] = template_dict
                 else:
 
                     parameter_data = self.parameters[_id]
                     source_translations = parameter_data["value_translations"].get(
-                        source_style, None
+                        original_style, None
                     )
                     target_translations = parameter_data["value_translations"].get(
-                        target_style, None
+                        translated_style, None
                     )
 
                     # convert param_value with source value_translations
-                    source_value = None
+                    original_value = None
                     if source_translations is None:
                         # no translator so keep value
-                        source_value = param_value
+                        original_value = param_value
                     else:
                         for key, value in source_translations:
                             if value == param_value:
-                                source_value = key
+                                original_value = key
                                 break
-                        if source_value is None:
-                            source_value = param_value
+                        if original_value is None:
+                            original_value = param_value
 
-                    target_value = None
+                    translated_value = None
                     if target_translations is None:
                         # no translator so keep value
-                        target_value = source_value
+                        translated_value = original_value
                     else:
                         mapped = False
                         for key, value in target_translations:
-                            if key == source_value:
-                                target_value = value
+                            if key == original_value:
+                                translated_value = value
                                 mapped = True
                                 break
 
-                        if mapped is False and target_value is None:
-                            target_value = source_value
+                        if mapped is False and translated_value is None:
+                            translated_value = original_value
 
                     template_dict.update(
                         {
-                            "target_key": translated_key,
-                            "target_value": target_value,
-                            "target_style": target_style,
+                            "translated_key": translated_key,
+                            "translated_value": translated_value,
+                            "translated_style": translated_style,
                             "was_translated": True,
                         }
                     )
-                    # translated_params.details[source_key] = template_dict
-                    # translated_params[translated_key] = target_value
-                    translated_params[source_key] = template_dict
+            translated_params[_name] = template_dict
 
         return translated_params
 
     def identify_parameters_triggering_rerun(self, params, style=None):
         if style is None:
-            style = self.source_style
+            style = self.original_style
         params_that_trigger_rerun = []
         for param_name in params.keys():
             if style not in self.parameter2id.keys():
@@ -409,7 +336,7 @@ class UParma(object):
 
         return params_that_trigger_rerun
 
-    def get_default_params(self, style=None, source_style="ursgal_style_1"):
+    def get_default_params(self, style=None):
         """Fetch translated default params for a given style1.
 
         Args:
@@ -446,8 +373,8 @@ class UParma(object):
                 else:
                     translated_default = untranslated_default
                 params[name] = {
-                    "target_key" : translated_key,
-                    "target_value" : translated_default
+                    "translated_key": translated_key,
+                    "translated_value": translated_default,
                 }
         return params
 

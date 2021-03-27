@@ -2,82 +2,86 @@ import uparma
 import pytest
 import pprint
 
-param = [
-    {
-        "_id": 1,
-        "name": "precursor_mass_tolerance_unit",
-        "description": "Precursor mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
-        "default_value": "ppm",
-        "value_type": "select",
-        "tag": ["accuracy", "precursor"],
-        "value_translations": {
-            "msamanda_style_1": [["da", "Da"]],
-            "msgfplus_style_1": [["da", "Da"]],
-            "omssa_style_1": [["da", ""], ["ppm", "-teppm"]],
-            "xtandem_style_1": [["da", "Daltons"]],
-            "msfragger_style_3": [["ppm", 1], ["da", 0]],
-        },
-        "key_translations": {
-            "ursgal_style_1": "precursor_mass_tolerance_unit",
-            "moda_style_1": "PPMTolerance",
-            "msamanda_style_1": "ms1_tol unit",
-            "msgfplus_style_1": "-t",
-            "omssa_style_1": "-teppm",
-            "xtandem_style_1": "spectrum, parent monoisotopic mass error units",
-            "msfragger_style_3": "precursor_mass_units",
-        },
-    }
-]
-
-jsons = {
-    ("general", "parameters"): "parameters.json",
-    ("general", "styles"): "styles.json",
+param = {
+    ("general", "parameters"): [
+        {
+            "_id": 1,
+            "name": "precursor_mass_tolerance_unit",
+            "description": "Precursor mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
+            "default_value": "ppm",
+            "value_type": "select",
+            "tag": ["accuracy", "precursor"],
+            "value_translations": {
+                "msamanda_style_1": [["da", "Da"]],
+                "msgfplus_style_1": [["da", "Da"]],
+                "omssa_style_1": [["da", ""], ["ppm", "-teppm"]],
+                "xtandem_style_1": [["da", "Daltons"]],
+                "msfragger_style_3": [["ppm", 1], ["da", 0]],
+            },
+            "key_translations": {
+                "ursgal_style_1": "precursor_mass_tolerance_unit",
+                "moda_style_1": "PPMTolerance",
+                "msamanda_style_1": "ms1_tol unit",
+                "msgfplus_style_1": "-t",
+                "omssa_style_1": "-teppm",
+                "xtandem_style_1": "spectrum, parent monoisotopic mass error units",
+                "msfragger_style_3": "precursor_mass_units",
+            },
+        }
+    ]
 }
-up = uparma.UParma(refresh_jsons=False, parameter_data=jsons)
-up.jsons[("general", "parameters")] = param
-up._parse_jsons()
+
 
 test_data_list = [
     {
-        "source_style": "msgfplus_style_1",
-        "target_style": "msfragger_style_3",
+        "original_style": "msgfplus_style_1",
+        "translated_Style": "msfragger_style_3",
         "input_dict": {"-t": "Da"},
-        "results": {"precursor_mass_units": 0},
+        "results": {
+            "precursor_mass_tolerance_unit": {
+                "translated_key": "precursor_mass_units",
+                "translated_value": 0,
+            }
+        },
     },
     {
-        "source_style": "msfragger_style_3",
-        "target_style": "xtandem_style_1",
+        "original_style": "msfragger_style_3",
+        "translated_Style": "xtandem_style_1",
         "input_dict": {"precursor_mass_units": 0},
-        "results": {"spectrum, parent monoisotopic mass error units": "Daltons"},
+        "results": {
+            "precursor_mass_tolerance_unit": {
+                "translated_key": "spectrum, parent monoisotopic mass error units",
+                "translated_value": "Daltons",
+            }
+        },
     },
     {
-        "source_style": "ursgal_style_1",
-        "target_style": "moda_style_1",
+        "original_style": "ursgal_style_1",
+        "translated_Style": "moda_style_1",
         "input_dict": {"precursor_mass_tolerance_unit": "ppm"},
-        "results": {"PPMTolerance": "ppm"},
+        "results": {
+            "precursor_mass_tolerance_unit": {
+                "translated_key": "PPMTolerance",
+                "translated_value": "ppm",
+            }
+        },
     },
     {
-        "source_style": "ursgal_style_1",
-        "target_style": "moda_style_1",
+        "original_style": "ursgal_style_1",
+        "translated_Style": "moda_style_1",
         "input_dict": {
             "precursor_mass_tolerance_unit": "ppm",
             "precursor_mass_units": 0,
         },
         "results": {
-            "PPMTolerance": "ppm",
-            "precursor_mass_units": 0,
-        },
-    },
-    {
-        "source_style": "ursgal_style_1",
-        "target_style": "terminat0r_style_1",
-        "input_dict": {
-            "really?": "yes!",
-            "really, really?": "YEEEESS!",
-        },
-        "results": {
-            "really?": "yes!",
-            "really, really?": "YEEEESS!",
+            "precursor_mass_tolerance_unit": {
+                "translated_key": "PPMTolerance",
+                "translated_value": "ppm",
+            },
+            "precursor_mass_units": {
+                "translated_key": "precursor_mass_units",
+                "translated_value": 0,
+            },
         },
     },
 ]
@@ -85,12 +89,15 @@ test_data_list = [
 
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_mapping(test_dict):
-    up.source_style = test_dict["source_style"]
-    pprint.pprint(test_dict)
+    up = uparma.UParma(parameter_data=param)
+    up.original_style = test_dict["original_style"]
     translated_params = up.translate(
         test_dict["input_dict"],
-        source_style=test_dict["source_style"],
-        target_style=test_dict["target_style"],
+        original_style=test_dict["original_style"],
+        translated_style=test_dict["translated_Style"],
     )
-
-    assert sorted(translated_params.items()) == sorted(test_dict["results"].items())
+    for uparma_key in translated_params.keys():
+        assert all(
+            r_items in translated_params[uparma_key].items()
+            for r_items in test_dict["results"][uparma_key].items()
+        )
