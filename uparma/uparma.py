@@ -351,8 +351,8 @@ class UParma(object):
         for key, value in self.parameters.items():
             translated_key = value["key_translations"].get(style, None)
             name = value["name"]
-            if isinstance(translated_key, list) is True:
-                translated_key = tuple(translated_key)
+            if isinstance(translated_key, tuple) is True:
+                translated_key = list(translated_key)
             if translated_key is None:
                 continue
             else:

@@ -96,5 +96,5 @@ def test_get_default_params_with_list_of_keys():
     }
     up = uparma.UParma(refresh_jsons=False, parameter_data=d["input"])
     default_params = up.get_default_params("omssa_style_1")
-    assert default_params["label"]["translated_key"] == ("-tem", "-tom")
+    assert default_params["label"]["translated_key"] == ["-tem", "-tom"]
     assert default_params["label"]["translated_value"] == "14N"
