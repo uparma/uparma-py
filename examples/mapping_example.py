@@ -15,7 +15,7 @@ def main():
 
     msgf_params = up.convert(
         input_dict,
-        target_style='msgfplus_style_1'
+        translated_style='msgfplus_style_1'
     )
     print('\nMapped to msgf+:')
     pprint.pprint(msgf_params)

@@ -35,7 +35,7 @@ class UParma(object):
             overridden and set to True.
 
         original_style (str): Convenience when mapper is used to map from the
-            same source style every time, in which case self.convert can be used
+            same original style every time, in which case self.convert can be used
             instead of self.translate
 
         parameter_data (dict): overwrite json loading with customized object
@@ -155,7 +155,7 @@ class UParma(object):
 
     def convert(self, param_dict, translated_style=None):
         """
-        Convenient wrapper to translate params with the source style defined
+        Convenient wrapper to translate params with the original style defined
         during init.
 
         Calls self.translate with original_style = self.original_style
@@ -168,7 +168,7 @@ class UParma(object):
 
     def translate(self, param_dict, original_style=None, translated_style=None):
         """
-        Translate param_dict from source style into target style.
+        Translate param_dict from original style into translated style.
 
 
         Keyword Arguments:
@@ -275,20 +275,20 @@ class UParma(object):
                 else:
 
                     parameter_data = self.parameters[_id]
-                    source_translations = parameter_data["value_translations"].get(
+                    original_translations = parameter_data["value_translations"].get(
                         original_style, None
                     )
-                    target_translations = parameter_data["value_translations"].get(
+                    translated_translations = parameter_data["value_translations"].get(
                         translated_style, None
                     )
 
-                    # convert param_value with source value_translations
+                    # convert param_value with original value_translations
                     original_value = None
-                    if source_translations is None:
+                    if original_translations is None:
                         # no translator so keep value
                         original_value = param_value
                     else:
-                        for key, value in source_translations:
+                        for key, value in original_translations:
                             if value == param_value:
                                 original_value = key
                                 break
@@ -296,12 +296,12 @@ class UParma(object):
                             original_value = param_value
 
                     translated_value = None
-                    if target_translations is None:
+                    if translated_translations is None:
                         # no translator so keep value
                         translated_value = original_value
                     else:
                         mapped = False
-                        for key, value in target_translations:
+                        for key, value in translated_translations:
                             if key == original_value:
                                 translated_value = value
                                 mapped = True

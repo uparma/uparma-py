@@ -35,7 +35,7 @@ param = {
 test_data_list = [
     {
         "original_style": "msgfplus_style_1",
-        "translated_Style": "msfragger_style_3",
+        "translated_style": "msfragger_style_3",
         "input_dict": {"-t": "Da"},
         "results": {
             "precursor_mass_tolerance_unit": {
@@ -46,7 +46,7 @@ test_data_list = [
     },
     {
         "original_style": "msfragger_style_3",
-        "translated_Style": "xtandem_style_1",
+        "translated_style": "xtandem_style_1",
         "input_dict": {"precursor_mass_units": 0},
         "results": {
             "precursor_mass_tolerance_unit": {
@@ -57,7 +57,7 @@ test_data_list = [
     },
     {
         "original_style": "ursgal_style_1",
-        "translated_Style": "moda_style_1",
+        "translated_style": "moda_style_1",
         "input_dict": {"precursor_mass_tolerance_unit": "ppm"},
         "results": {
             "precursor_mass_tolerance_unit": {
@@ -68,7 +68,7 @@ test_data_list = [
     },
     {
         "original_style": "ursgal_style_1",
-        "translated_Style": "moda_style_1",
+        "translated_style": "moda_style_1",
         "input_dict": {
             "precursor_mass_tolerance_unit": "ppm",
             "precursor_mass_units": 0,
@@ -94,7 +94,7 @@ def test_mapping(test_dict):
     translated_params = up.translate(
         test_dict["input_dict"],
         original_style=test_dict["original_style"],
-        translated_style=test_dict["translated_Style"],
+        translated_style=test_dict["translated_style"],
     )
     for uparma_key in translated_params.keys():
         assert all(

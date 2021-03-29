@@ -38,19 +38,19 @@ for test_id in param_w_value_trans:
 @pytest.mark.parametrize("test_id", test_data_list)
 def test_simple_back_and_forward_mapping(test_id):
     param_dict = up.parameters[test_id]
-    for source_style in param_dict["key_translations"]:
-        if isinstance(param_dict["key_translations"][source_style], list):
+    for original_style in param_dict["key_translations"]:
+        if isinstance(param_dict["key_translations"][original_style], list):
             continue
-        for target_style in param_dict["key_translations"]:
+        for translated_style in param_dict["key_translations"]:
 
-            if source_style == target_style:
+            if original_style == translated_style:
                 # skip translations of a style to itself
                 continue
 
             print()
-            print("Translating", source_style, "to", target_style)
+            print("Translating", original_style, "to", translated_style)
 
-            translations = param_dict["value_translations"].get(source_style, None)
+            translations = param_dict["value_translations"].get(original_style, None)
 
             if translations is None:
                 values = [param_dict["default_value"]]
@@ -58,13 +58,13 @@ def test_simple_back_and_forward_mapping(test_id):
                 values = [x[1] for x in translations]
 
             for value in values:
-                original_dict = {param_dict["key_translations"][source_style]: value}
+                original_dict = {param_dict["key_translations"][original_style]: value}
 
                 print("original_dict", original_dict)
                 forward_mapping = up.translate(
                     original_dict,
-                    original_style=source_style,
-                    translated_style=target_style,
+                    original_style=original_style,
+                    translated_style=translated_style,
                 )
                 new_input = {}
                 for k, v in forward_mapping.items():
@@ -72,7 +72,7 @@ def test_simple_back_and_forward_mapping(test_id):
                 print("Reformatted forward_mapping", new_input)
 
                 retour_mapping = up.translate(
-                    new_input, original_style=target_style, translated_style=source_style
+                    new_input, original_style=translated_style, translated_style=original_style
                 )
                 retour = {}
                 for k, v in retour_mapping.items():
