@@ -322,11 +322,19 @@ class UParma(object):
 
         return translated_params
 
-    def identify_parameters_triggering_rerun(self, params, style=None):
+    def identify_parameters_triggering_rerun(self, params_list, style=None):
+        """Identify from a list of params which one will trigger rerun
+
+
+        Args:
+            params_list (list of str) list with parameter names
+            style (str)
+
+        """
         if style is None:
             style = self.original_style
         params_that_trigger_rerun = []
-        for param_name in params.keys():
+        for param_name in params_list:
             if style not in self.parameter2id.keys():
                 continue
             _id = self.parameter2id[style].get(param_name, None)
