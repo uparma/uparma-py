@@ -96,6 +96,7 @@ def test_mapping(test_dict):
         original_style=test_dict["original_style"],
         translated_style=test_dict["translated_style"],
     )
+    pprint.pprint(translated_params)
     for uparma_key in translated_params.keys():
         assert all(
             r_items in translated_params[uparma_key].items()

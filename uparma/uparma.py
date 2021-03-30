@@ -224,11 +224,9 @@ class UParma(object):
 
         """
         cannot_be_translated = "{0} for {1} cannot be translated into {2}"
-
         translated_params = UParmaDict()
-        for param_name, param_value in param_dict.items():
-            original_key = param_name
-            original_value = param_value
+
+        for original_key, original_value in param_dict.items():
             template_dict = {
                 "original_style": original_style,
                 "original_key": original_key,
@@ -241,13 +239,10 @@ class UParma(object):
 
             _id = self.parameter2id[original_style].get(original_key, None)
             if _id is None:
-                translated_params[original_key] = original_value
                 template_dict.update(
                     {
                         "was_translated": False,
-                        "reason": "Parameter {original_key} does not exist in {original_style}".format(
-                            original_key=original_key, original_style=original_style
-                        ),
+                        "reason": f"Parameter {original_key} does not exist in {original_style}",
                     }
                 )
                 _name = original_key
@@ -255,60 +250,44 @@ class UParma(object):
                 _name = self.parameters[_id].get("name", None)
                 if _name is None:
                     raise TypeError(f"id {_id} has no name! Contact uparma team!")
+
+                # ---
                 translated_key = self.parameters[_id]["key_translations"].get(
                     translated_style,
                     None,
                 )
-                if isinstance(translated_key, list) is True:
-                    translated_key = tuple(translated_key)
                 if translated_key is None:
-                    translated_params[original_key] = original_value
-                    template_dict.update(
-                        {
-                            "was_translated": False,
-                            "reason": "Parameter {original_key} does not exist in {translated_style}".format(
-                                original_key=original_key,
-                                translated_style=translated_style,
-                            ),
-                        }
-                    )
+                    _name = None  # will not be translated
                 else:
+                    if isinstance(translated_key, list) is True:
+                        translated_key = tuple(translated_key)
 
                     parameter_data = self.parameters[_id]
-                    original_translations = parameter_data["value_translations"].get(
-                        original_style, None
-                    )
-                    translated_translations = parameter_data["value_translations"].get(
-                        translated_style, None
+                    org_value_translations = parameter_data["value_translations"].get(
+                        original_style, []
                     )
 
-                    # convert param_value with original value_translations
-                    original_value = None
-                    if original_translations is None:
-                        # no translator so keep value
-                        original_value = param_value
-                    else:
-                        for key, value in original_translations:
-                            if value == param_value:
-                                original_value = key
-                                break
-                        if original_value is None:
-                            original_value = param_value
+                    trans_value_translations = parameter_data["value_translations"].get(
+                        translated_style, []
+                    )
+                    """
+                    {'original_key': '-t',
+                    'original_style': 'msgfplus_style_1',
+                    'original_value': 'Da',
+                    'translated_key': '-t',
+                    'translated_style': 'msfragger_style_3',
+                    'translated_value': 'Da'}
+                    [['da', 'Da']]
+                    [['ppm', 1], ['da', 0]]
 
-                    translated_value = None
-                    if translated_translations is None:
-                        # no translator so keep value
-                        translated_value = original_value
-                    else:
-                        mapped = False
-                        for key, value in translated_translations:
-                            if key == original_value:
-                                translated_value = value
-                                mapped = True
-                                break
-
-                        if mapped is False and translated_value is None:
-                            translated_value = original_value
+                    Starting from "Da".. finding 'da' .. looking up ['da', 0]
+                    """
+                    translated_value = original_value
+                    for _uparma_v, _orgstyle_v in org_value_translations:
+                        if _orgstyle_v == original_value:
+                            for _uparma_vt, _transtyle_v in trans_value_translations:
+                                if _uparma_v == _uparma_vt:
+                                    translated_value = _transtyle_v
 
                     template_dict.update(
                         {
@@ -318,8 +297,8 @@ class UParma(object):
                             "was_translated": True,
                         }
                     )
-            translated_params[_name] = template_dict
-
+                if _name is not None:
+                    translated_params[_name] = template_dict
         return translated_params
 
     def identify_parameters_triggering_rerun(self, params_list, style=None):
