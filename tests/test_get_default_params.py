@@ -56,11 +56,19 @@ test_data_list = [
 
 @pytest.mark.parametrize("test_dict", test_data_list)
 def test_get_default_params(test_dict):
-    up = uparma.UParma(refresh_jsons=False, parameter_data=test_dict["input"])
+    up = uparma.UParma(parameter_data=test_dict["input"])
     default_params = up.get_default_params(style="msfragger_style_3")
-    assert default_params["precursor_mass_units"] == 1
-    assert default_params["precursor_mass_lower"] == 5
-    assert default_params["database_name"] is None
+    assert (
+        default_params["precursor_mass_tolerance_unit"]["translated_key"]
+        == "precursor_mass_units"
+    )
+    assert default_params["precursor_mass_tolerance_unit"]["translated_value"] == 1
+    assert (
+        default_params["precursor_mass_tolerance"]["translated_key"]
+        == "precursor_mass_lower"
+    )
+    assert default_params["precursor_mass_tolerance"]["translated_value"] == 5
+    assert default_params["database"]["translated_value"] is None
 
 
 def test_get_default_params_with_list_of_keys():
@@ -75,6 +83,7 @@ def test_get_default_params_with_list_of_keys():
                         "myrimatch_style_1": "label",
                         "omssa_style_1": ["-tem", "-tom"],
                         "pipi_style_1": "15N",
+                        "ursgal_style_1": "label",
                     },
                     "name": "label",
                     "tag": ["label", "modifications"],
@@ -87,4 +96,5 @@ def test_get_default_params_with_list_of_keys():
     }
     up = uparma.UParma(refresh_jsons=False, parameter_data=d["input"])
     default_params = up.get_default_params("omssa_style_1")
-    assert default_params[("-tem", "-tom")] == "14N"
+    assert default_params["label"]["translated_key"] == ["-tem", "-tom"]
+    assert default_params["label"]["translated_value"] == "14N"

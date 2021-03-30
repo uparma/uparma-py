@@ -23,22 +23,22 @@ def main(parameter):
     '''
 
     up = uparma.UParma()
-    source_style_matching_parameter_name = {}
-    for source_style in up.parameter2id.keys():
-        _id = up.parameter2id[source_style].get(parameter, None)
+    original_style_matching_parameter_name = {}
+    for original_style in up.parameter2id.keys():
+        _id = up.parameter2id[original_style].get(parameter, None)
         # print(_id)
         if _id is not None:
-            if parameter in up.parameter2id[source_style].keys():
-                source_style_matching_parameter_name[source_style] = {
+            if parameter in up.parameter2id[original_style].keys():
+                original_style_matching_parameter_name[original_style] = {
                     '_id': _id
                 }
             parameter_entry = up.parameters[_id]
-            source_style_matching_parameter_name[source_style]['description'] = parameter_entry['description']
-            source_style_matching_parameter_name[source_style]['value_translations'] = parameter_entry['value_translations'].get(
-                source_style,
+            original_style_matching_parameter_name[original_style]['description'] = parameter_entry['description']
+            original_style_matching_parameter_name[original_style]['value_translations'] = parameter_entry['value_translations'].get(
+                original_style,
                 {}
             )
-    if len(source_style_matching_parameter_name) == 0:
+    if len(original_style_matching_parameter_name) == 0:
         print(
             'Parameter "{0}" can not be found! Spelling correct?'.format(
                 parameter
@@ -50,13 +50,13 @@ def main(parameter):
                 parameter
             )
         )
-    for source_style, source_style_info in source_style_matching_parameter_name.items():
+    for original_style, original_style_info in original_style_matching_parameter_name.items():
         print(
             '\t{0}; description: {1}; value_translations: {2}; uparma id: {3}'.format(
-                source_style,
-                source_style_info['description'],
-                source_style_info['value_translations'],
-                source_style_info['_id'],
+                original_style,
+                original_style_info['description'],
+                original_style_info['value_translations'],
+                original_style_info['_id'],
             )
         )
 
