@@ -9,5 +9,13 @@ install:
 - pip install -r requirements.txt
 script: pytest
 deploy:
+  provider: pypi
+  user: pyratez
+  distributions: sdist bdist_wheel bdist_egg
+  on:
+    tags: true
+    all_branches: true
+    skip_existing: true
+    skip_cleanup: true
   password:
     secure: S20kJuyhsjVO3WIisG89UDFL9XbgoL/J5dXzOsAGlu8XVpnY9c1oANUu+42RoBwe21g4ASiYnc/svKridwU6BccDFTMiQDpAjFMJUNN4/TPD3xIMSDmk3VvdBhSc7hxtrkTQm86hh/GQmt4swVtPresfFHnotT8k+86oziPJV4U0y45u2u+BffPydie6TWkpWxgv4HFnFfRSnZa75UdhmzJ9oRPvcZ68Z1yevMXlFBOaOn91JS1e+T8Mo3HuzCH9JFxWWKMfxgRumZIQusZvLTtWZKf8IlIQ/8XHwdvKeWIouxf9DVcbyIVFWz+OHsSBTAVpuQP+tZpLwaxE+KJ4n1Zk7O57EbG/Vq3SJTQbpQvt+CZkgp1RqDMv9Lb2iEzBfGSOy3yOHRK10tJ+7HmZWPK58IiMlRzdIaE0RVwi5z3OyFrSxv6TZ3aP8DwZ2sBq0vSPxNqjFbweIUJeRqTAjJxTZCG42hWK9Dl7EG0cyHmfRB5pmvpyw0W/JxmBnB0g9M/DHRwFfp83ufOa6fjDqxpEfPODDzWMBQ9tbsRUJ2UM13XSBsgmuyfm0Ka6dVKWLQ1sxbtx/NHxrm/JAQuBhZhlMu3vqmixAslosG67nSSHEMFkHGHL450bknfOTNoXoGY3AO7s4lEofXWR/mWDj/JVpp/0n3K7btkCQyMmwes=
