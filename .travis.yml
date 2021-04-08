@@ -1,15 +1,13 @@
 language: python
 python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
+- '3.6'
+- '3.7'
+- '3.8'
 sudo: false
-
-# before_install: pip install codecov
-# after_success:  codecov
-
 install:
-  - python setup.py install
-  - pip install -r requirements.txt
-
+- python setup.py install
+- pip install -r requirements.txt
 script: pytest
+deploy:
+  password:
+    secure: F/US/Pq59oLHkJZjnrIGsppUXOkphSYCziklCnfS5uU/5y+7wFKbrhnidSITU9tD4lxrah5WRJh48Dzydvmc91LO0+8+1K27H16SmLUTrMQbZ+gCSv3sXqpanPdHJbXsZOCj3Yteg8yDdmQtleNTZvqQv2dV1LNUzywz+yxzKrViOvEVryFnJFCVMARewMAvfbNHz9xwcITUUgumatP5gByxdVyTdkIbESZXxqfUBl584not4uep+bxKLCpp/VUfcsiZ1gp4zOQ8yIeAnXE03rkyk0W/Ipg5blRgunOAs1kxsrza6iisKht69D46EKR0IO/tkAdRVJuVhwwFIFYTU92FIFtZskc+sfVTvVFsS12GSFW91HPWJUkyiDlKMs3B6LYsUS1CStTEjdvbDgVy628rCanTt4XbTrsIS01kOkfPNM+0pIH7hLWjfiIb1uCZsNv9ve6hOcjZDnD5eNomKWbe4LiuBFpF250ohWcENgGR7VH8AzLSPk33xfQNGwcDzPGziZnM0P8/IfMcsYBHK7ljIdTfBpMmVRhzotAKNZdbTJDtrS77/C+v27W9hGkLXjLtDQt/j7R7KTEPKP7v2GSGN83l/cHkdBT+KHd0Qj0b4LOWDCwXDnY+EjeqvKc/O5e5IE0x9gAmVHZuF2z/RoUR5ZO6uk9VT9c/Ctmkvqs=
