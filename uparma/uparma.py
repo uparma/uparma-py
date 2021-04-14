@@ -316,11 +316,15 @@ class UParma(object):
         for param_name in params_list:
             if style not in self.parameter2id.keys():
                 continue
-            _id = self.parameter2id[style].get(param_name, None)
-            if _id is not None:
-                if self.parameters[_id].get("triggers_rerun", False) is True:
-                    params_that_trigger_rerun.append(param_name)
+            if isinstance(param_name, list) is False:
+                listified_param_name = [param_name]
 
+            for _pname in listified_param_name:
+                _id = self.parameter2id[style].get(_pname, None)
+                if _id is not None:
+                    if self.parameters[_id].get("triggers_rerun", False) is True:
+                        params_that_trigger_rerun.append(param_name)
+                        break
         return params_that_trigger_rerun
 
     def get_default_params(self, style=None):
