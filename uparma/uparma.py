@@ -324,7 +324,7 @@ class UParma(object):
                 if _id is not None:
                     if self.parameters[_id].get("triggers_rerun", False) is True:
                         params_that_trigger_rerun.append(param_name)
-
+                        break
         return params_that_trigger_rerun
 
     def get_default_params(self, style=None):
