@@ -75,3 +75,4 @@ def test_identify_params_trigger_rerun(test_dict):
     up = uparma.UParma(parameter_data=test_dict["uparma_jsons"])
     rerun_params = up.identify_parameters_triggering_rerun(test_dict["input"])
     assert rerun_params == test_dict["results"]
+
