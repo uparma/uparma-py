@@ -352,12 +352,17 @@ class UParma(object):
                     "value_translations" in value
                     and len(value["value_translations"]) > 0
                 ):
+                    # if (style in value["value_translations"] and untranslated_default
+                    #         in dict(value["value_translations"][style]).keys()
+                    # ):
+                    #     translated_default = dict(value["value_translations"][style])[
+                    #         untranslated_default]
                     if style in value["value_translations"]:
                         translated_default = dict(
                             value["value_translations"][style]
                         ).get(
                             untranslated_default,
-                            dict(value["value_translations"][style]),
+                            untranslated_default,
                         )
                     else:
                         translated_default = untranslated_default
