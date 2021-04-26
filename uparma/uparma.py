@@ -347,27 +347,21 @@ class UParma(object):
             if translated_key is None:
                 continue
             else:
-                untranslated_default = value["default_value"]
                 if (
                     "value_translations" in value
                     and len(value["value_translations"]) > 0
                 ):
-                    # if (style in value["value_translations"] and untranslated_default
-                    #         in dict(value["value_translations"][style]).keys()
-                    # ):
-                    #     translated_default = dict(value["value_translations"][style])[
-                    #         untranslated_default]
                     if style in value["value_translations"]:
                         translated_default = dict(
                             value["value_translations"][style]
                         ).get(
-                            untranslated_default,
-                            untranslated_default,
+                            value["default_value"],
+                            value["default_value"],
                         )
                     else:
-                        translated_default = untranslated_default
+                        translated_default = value["default_value"]
                 else:
-                    translated_default = untranslated_default
+                    translated_default = value["default_value"]
                 params[name] = {
                     "translated_key": translated_key,
                     "translated_value": translated_default,
