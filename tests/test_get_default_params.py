@@ -98,3 +98,30 @@ def test_get_default_params_with_list_of_keys():
     default_params = up.get_default_params("omssa_style_1")
     assert default_params["label"]["translated_key"] == ["-tem", "-tom"]
     assert default_params["label"]["translated_value"] == "14N"
+
+def test_get_default_params_with_no_value_trans_for_default():
+    d = {
+        "input": {
+            ("general", "parameters"): [
+                {
+                    "_id": 83,
+                    "default_value": "ppm",
+                    "description": "Fragment mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
+                    "key_translations": {
+                        "xtandem_style_1": "spectrum, fragment monoisotopic mass error units",
+                        "ursgal_style_1": "frag_mass_tolerance_unit",
+                    },
+                    "name": "frag_mass_tolerance_unit",
+                    "tag": ["accuracy","fragment"],
+                    "triggers_rerun": True,
+                    "value_translations": {"xtandem_style_1": [["da","Daltons"]]},
+                    "value_type": "select"
+                },
+            ]
+        }
+    }
+    up = uparma.UParma(refresh_jsons=False, parameter_data=d["input"])
+    default_params = up.get_default_params("xtandem_style_1")
+    assert default_params["frag_mass_tolerance_unit"]["translated_key"] == "spectrum, fragment monoisotopic mass error units"
+    assert default_params["frag_mass_tolerance_unit"]["translated_value"] == "ppm"
+
