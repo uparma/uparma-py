@@ -3,7 +3,7 @@ uparma-py - the Python framework for the uparma project
 
 *UPARMA - Universal Parameter Mapper for Proteomics*
 
-|build-status-travis| |doc-status| |build-status-appveyor|
+|build-status-travis| |doc-status| |build-status-appveyor| |pypi|
 
 .. |build-status-travis| image:: https://travis-ci.org/uparma/uparma-py.svg?branch=master
    :target: https://travis-ci.org/uparma/uparma-py
@@ -17,6 +17,9 @@ uparma-py - the Python framework for the uparma project
    :target: https://ci.appveyor.com/project/fufezan-lab/uparma-py
    :alt: AppVeyor CI status
 
+.. |pypi| image:: https://img.shields.io/pypi/v/uparma-py.svg
+   :target: https://pypi.org/project/uparma-py/
+   
 Installation
 ############
 
