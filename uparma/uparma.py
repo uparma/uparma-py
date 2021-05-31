@@ -366,6 +366,8 @@ class UParma(object):
                 else:
                     translated_default = value["default_value"]
                 params[name] = {
+                    "original_key": value["name"],
+                    "original_value": value["default_value"],
                     "translated_key": translated_key,
                     "translated_value": translated_default,
                 }
