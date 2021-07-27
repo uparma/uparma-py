@@ -71,17 +71,36 @@ def test_simple_back_and_forward_mapping(test_id):
                 for k, v in forward_mapping.items():
                     if isinstance(v["translated_key"], list):
                         continue
-                    new_input[v["translated_key"]] = v["translated_value"]
-                print("Reformatted forward_mapping", new_input)
+                    if v["was_translated"] is True:
+                        new_input[v["translated_key"]] = v["translated_value"]
+                        print("Reformatted forward_mapping", new_input)
 
-                retour_mapping = up.translate(
-                    new_input,
-                    original_style=translated_style,
-                    translated_style=original_style,
-                )
-                retour = {}
-                for k, v in retour_mapping.items():
-                    retour[v["translated_key"]] = v["translated_value"]
+                        retour_mapping = up.translate(
+                            new_input,
+                            original_style=translated_style,
+                            translated_style=original_style,
+                        )
+                        retour = {}
+                        for k, v in retour_mapping.items():
+                            retour[v["translated_key"]] = v["translated_value"]
 
-                print("Reformatted retour", retour)
-                assert retour == original_dict
+                        print("Reformatted retour", retour)
+                        assert retour == original_dict
+
+                    elif v["was_translated"] is False:
+                        break
+
+
+
+
+                # retour_mapping = up.translate(
+                #     new_input,
+                #     original_style=translated_style,
+                #     translated_style=original_style,
+                # )
+                # retour = {}
+                # for k, v in retour_mapping.items():
+                #     retour[v["translated_key"]] = v["translated_value"]
+                #
+                # print("Reformatted retour", retour)
+                # assert retour == original_dict
