@@ -89,18 +89,3 @@ def test_simple_back_and_forward_mapping(test_id):
 
                     elif v["was_translated"] is False:
                         break
-
-
-
-
-                # retour_mapping = up.translate(
-                #     new_input,
-                #     original_style=translated_style,
-                #     translated_style=original_style,
-                # )
-                # retour = {}
-                # for k, v in retour_mapping.items():
-                #     retour[v["translated_key"]] = v["translated_value"]
-                #
-                # print("Reformatted retour", retour)
-                # assert retour == original_dict
