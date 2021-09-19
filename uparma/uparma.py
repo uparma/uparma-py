@@ -283,18 +283,20 @@ class UParma(object):
                     Starting from "Da".. finding 'da' .. looking up ['da', 0]
                     """
                     translated_value = original_value
+                    was_translated = False
                     for _uparma_v, _orgstyle_v in org_value_translations:
                         if _orgstyle_v == original_value:
                             for _uparma_vt, _transtyle_v in trans_value_translations:
                                 if _uparma_v == _uparma_vt:
                                     translated_value = _transtyle_v
+                                    was_translated = True
 
                     template_dict.update(
                         {
                             "translated_key": translated_key,
                             "translated_value": translated_value,
                             "translated_style": translated_style,
-                            "was_translated": True,
+                            "was_translated": was_translated,
                         }
                     )
                 if _name is not None:
