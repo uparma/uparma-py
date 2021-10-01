@@ -1,5 +1,5 @@
-uparma-py - the Python framework for the uparma project
-=======================================================
+uparma-py - Python framework for the uparma project
+===================================================
 
 *UPARMA - Universal Parameter Mapper for Proteomics*
 
