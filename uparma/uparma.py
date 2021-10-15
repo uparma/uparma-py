@@ -270,6 +270,11 @@ class UParma(object):
                     trans_value_translations = parameter_data["value_translations"].get(
                         translated_style, []
                     )
+
+                    is_parameter_collection = parameter_data.get(
+                        "is_parameter_collection", False
+                    )
+
                     """
                     {'original_key': '-t',
                     'original_style': 'msgfplus_style_1',
@@ -282,14 +287,26 @@ class UParma(object):
 
                     Starting from "Da".. finding 'da' .. looking up ['da', 0]
                     """
-                    translated_value = original_value
-                    was_translated = False
-                    for _uparma_v, _orgstyle_v in org_value_translations:
-                        if _orgstyle_v == original_value:
-                            for _uparma_vt, _transtyle_v in trans_value_translations:
-                                if _uparma_v == _uparma_vt:
-                                    translated_value = _transtyle_v
-                                    was_translated = True
+                    if is_parameter_collection:
+                        translated_value = []
+                        for local_p_dict in original_value:
+                            _translated_sub_collection = self.translate(
+                                local_p_dict,
+                                original_style=original_style,
+                                translated_style=translated_style,
+                            )
+                            translated_value.append(_translated_sub_collection)
+                        was_translated = None
+
+                    else:
+                        translated_value = original_value
+                        was_translated = False
+                        for _uparma_v, _orgstyle_v in org_value_translations:
+                            if _orgstyle_v == original_value:
+                                for _uparma_vt, _transtyle_v in trans_value_translations:
+                                    if _uparma_v == _uparma_vt:
+                                        translated_value = _transtyle_v
+                                        was_translated = True
 
                     template_dict.update(
                         {
@@ -297,6 +314,7 @@ class UParma(object):
                             "translated_value": translated_value,
                             "translated_style": translated_style,
                             "was_translated": was_translated,
+                            "is_parameter_collection": is_parameter_collection,
                         }
                     )
                 if _name is not None:
