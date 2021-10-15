@@ -6,3 +6,4 @@ build
 pyenv
 .idea
 .DS_Store
+.tox
