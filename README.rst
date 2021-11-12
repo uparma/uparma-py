@@ -17,8 +17,8 @@ uparma-py - Python framework for the uparma project
    :target: https://ci.appveyor.com/project/fufezan-lab/uparma-py
    :alt: AppVeyor CI status
 
-.. |pypi| image:: https://img.shields.io/pypi/v/uparma-py.svg
-   :target: https://pypi.org/project/uparma-py/
+.. |pypi| image:: https://github.com/uparma/uparma-py/actions/workflows/cd.yml/badge.svg
+   :target: https://github.com/uparma/uparma-py/actions/workflows/cd
    
 Installation
 ############
