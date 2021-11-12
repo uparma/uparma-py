@@ -8,7 +8,6 @@ test_data_list = [
         "uparma_jsons": {
             ("general", "parameters"): [
                 {
-                    "_id": 1,
                     "name": "Luke",
                     "triggers_rerun": True,
                     "key_translations": {
@@ -16,7 +15,6 @@ test_data_list = [
                     },
                 },
                 {
-                    "_id": 2,
                     "name": "Leia",
                     "key_translations": {
                         "ursgal_style_1": "The force is strong in this o+",
@@ -34,7 +32,6 @@ test_data_list = [
         "uparma_jsons": {
             ("general", "parameters"): [
                 {
-                    "_id": 1,
                     "name": "Luke",
                     "triggers_rerun": True,
                     "key_translations": {
@@ -42,7 +39,6 @@ test_data_list = [
                     },
                 },
                 {
-                    "_id": 2,
                     "name": "Leia",
                     "key_translations": {
                         "ursgal_style_1": "The force is strong in this o+",
@@ -75,4 +71,3 @@ def test_identify_params_trigger_rerun(test_dict):
     up = uparma.UParma(parameter_data=test_dict["uparma_jsons"])
     rerun_params = up.identify_parameters_triggering_rerun(test_dict["input"])
     assert rerun_params == test_dict["results"]
-

@@ -10,14 +10,12 @@ test_data_list = [
         "input": {
             ("general", "parameters"): [
                 {
-                    "_id": 1,
                     "name": "Luke",
                     "key_translations": {
                         "ursgal_style_1": "The force is strong in this one",
                     },
                 },
                 {
-                    "_id": 1,
                     "name": "Leia",
                     "key_translations": {
                         "ursgal_style_1": "The force is strong in this one",

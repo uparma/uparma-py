@@ -5,7 +5,6 @@ import pprint
 param = {
     ("general", "parameters"): [
         {
-            "_id": 362,
             "default_value": [],
             "description": "Experimental Setup list describing each sample",
             "is_parameter_collection": True,
@@ -21,7 +20,6 @@ param = {
             "value_type": "list",
         },
         {
-            "_id": 363,
             "default_value": "",
             "description": "Experiment - file name (many more to come)",
             "key_translations": {
@@ -35,7 +33,6 @@ param = {
             "value_type": "str",
         },
         {
-            "_id": 364,
             "default_value": "",
             "description": "Experiment - Condition (many more to come)",
             "key_translations": {
@@ -59,7 +56,10 @@ test_data_list = [
         "input_dict": {
             "experiment_setup": [
                 {"experiment_file_name": "First", "experiment_condition": "control"},
-                {"experiment_file_name": "Second", "experiment_condition": "treatment1"},
+                {
+                    "experiment_file_name": "Second",
+                    "experiment_condition": "treatment1",
+                },
             ]
         },
         "results": {

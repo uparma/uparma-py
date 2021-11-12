@@ -11,7 +11,6 @@ test_data_list = [
         "input": {
             ("general", "parameters"): [
                 {
-                    "_id": 1,
                     "name": "precursor_mass_tolerance_unit",
                     "description": "Precursor mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
                     "default_value": "ppm",
@@ -27,7 +26,6 @@ test_data_list = [
                     },
                 },
                 {
-                    "_id": 2,
                     "name": "precursor_mass_tolerance",
                     "description": "Precursor mass tolerance",
                     "default_value": 5,
@@ -38,7 +36,6 @@ test_data_list = [
                     },
                 },
                 {
-                    "_id": 3,
                     "name": "database",
                     "description": "Precursor mass tolerance",
                     "default_value": None,
@@ -76,7 +73,6 @@ def test_get_default_params_with_list_of_keys():
         "input": {
             ("general", "parameters"): [
                 {
-                    "_id": 135,
                     "default_value": "14N",
                     "description": "15N if the corresponding amino acid labeling was applied",
                     "key_translations": {
@@ -99,12 +95,12 @@ def test_get_default_params_with_list_of_keys():
     assert default_params["label"]["translated_key"] == ["-tem", "-tom"]
     assert default_params["label"]["translated_value"] == "14N"
 
+
 def test_get_default_params_with_no_value_trans_for_default():
     d = {
         "input": {
             ("general", "parameters"): [
                 {
-                    "_id": 83,
                     "default_value": "ppm",
                     "description": "Fragment mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
                     "key_translations": {
@@ -112,16 +108,27 @@ def test_get_default_params_with_no_value_trans_for_default():
                         "ursgal_style_1": "frag_mass_tolerance_unit",
                     },
                     "name": "frag_mass_tolerance_unit",
-                    "tag": ["accuracy","fragment"],
+                    "tag": ["accuracy", "fragment"],
                     "triggers_rerun": True,
-                    "value_translations": {"xtandem_style_1": [["da","Daltons"]]},
-                    "value_type": "select"
+                    "value_translations": {"xtandem_style_1": [["da", "Daltons"]]},
+                    "value_type": "select",
                 },
             ]
         }
     }
     up = uparma.UParma(refresh_jsons=False, parameter_data=d["input"])
     default_params = up.get_default_params("xtandem_style_1")
-    assert default_params["frag_mass_tolerance_unit"]["translated_key"] == "spectrum, fragment monoisotopic mass error units"
+    assert (
+        default_params["frag_mass_tolerance_unit"]["translated_key"]
+        == "spectrum, fragment monoisotopic mass error units"
+    )
     assert default_params["frag_mass_tolerance_unit"]["translated_value"] == "ppm"
 
+
+def test_get_default_msfragger_3():
+    up = uparma.UParma()
+    default_params = up.get_default_params("msfragger_style_3")
+    import pprint
+
+    pprint.pprint(default_params)
+    assert default_params["enzyme_specificity"]["translated_value"] == 2
