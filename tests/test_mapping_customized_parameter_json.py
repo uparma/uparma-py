@@ -5,7 +5,6 @@ import pprint
 param = {
     ("general", "parameters"): [
         {
-            "_id": 1,
             "name": "precursor_mass_tolerance_unit",
             "description": "Precursor mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
             "default_value": "ppm",

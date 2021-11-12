@@ -53,11 +53,11 @@ class UParma(object):
                 (
                     "general",
                     "parameters",
-                ): [{"-id": ... }]
+                ): [{"name": ... }]
                 (
                     "general",
                     "styles",
-                ): [{"_id": ... }]
+                ): [{"name": ... }]
 
 
     """
@@ -126,8 +126,8 @@ class UParma(object):
                 continue
 
             # print(url_id)
-            for uparma_entry in self.jsons[url_id]:
-                _id = uparma_entry["_id"]
+            for _id, uparma_entry in enumerate(self.jsons[url_id]):
+                # _id = uparma_entry["_id"]
                 self.parameters[_id] = uparma_entry
                 for key, value in uparma_entry["key_translations"].items():
 
@@ -303,7 +303,10 @@ class UParma(object):
                         was_translated = False
                         for _uparma_v, _orgstyle_v in org_value_translations:
                             if _orgstyle_v == original_value:
-                                for _uparma_vt, _transtyle_v in trans_value_translations:
+                                for (
+                                    _uparma_vt,
+                                    _transtyle_v,
+                                ) in trans_value_translations:
                                     if _uparma_v == _uparma_vt:
                                         translated_value = _transtyle_v
                                         was_translated = True
@@ -380,7 +383,9 @@ class UParma(object):
                                 value["default_value"],
                             )
                         else:
-                            translated_default = dict(value["value_translations"][style])
+                            translated_default = dict(
+                                value["value_translations"][style]
+                            )
                     else:
                         translated_default = value["default_value"]
                 else:
