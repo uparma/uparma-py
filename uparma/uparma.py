@@ -341,7 +341,8 @@ class UParma(object):
                 continue
             if isinstance(param_name, list) is False:
                 listified_param_name = [param_name]
-
+            else:
+                listified_param_name = param_name
             for _pname in listified_param_name:
                 _id = self.parameter2id[style].get(_pname, None)
                 if _id is not None:
