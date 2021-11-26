@@ -53,11 +53,11 @@ class UParma(object):
                 (
                     "general",
                     "parameters",
-                ): [{"-id": ... }]
+                ): [{"name": ... }]
                 (
                     "general",
                     "styles",
-                ): [{"_id": ... }]
+                ): [{"name": ... }]
 
 
     """
@@ -126,8 +126,8 @@ class UParma(object):
                 continue
 
             # print(url_id)
-            for uparma_entry in self.jsons[url_id]:
-                _id = uparma_entry["_id"]
+            for _id, uparma_entry in enumerate(self.jsons[url_id]):
+                # _id = uparma_entry["_id"]
                 self.parameters[_id] = uparma_entry
                 for key, value in uparma_entry["key_translations"].items():
 
@@ -270,6 +270,11 @@ class UParma(object):
                     trans_value_translations = parameter_data["value_translations"].get(
                         translated_style, []
                     )
+
+                    is_parameter_collection = parameter_data.get(
+                        "is_parameter_collection", False
+                    )
+
                     """
                     {'original_key': '-t',
                     'original_style': 'msgfplus_style_1',
@@ -282,19 +287,37 @@ class UParma(object):
 
                     Starting from "Da".. finding 'da' .. looking up ['da', 0]
                     """
-                    translated_value = original_value
-                    for _uparma_v, _orgstyle_v in org_value_translations:
-                        if _orgstyle_v == original_value:
-                            for _uparma_vt, _transtyle_v in trans_value_translations:
-                                if _uparma_v == _uparma_vt:
-                                    translated_value = _transtyle_v
+                    if is_parameter_collection:
+                        translated_value = []
+                        for local_p_dict in original_value:
+                            _translated_sub_collection = self.translate(
+                                local_p_dict,
+                                original_style=original_style,
+                                translated_style=translated_style,
+                            )
+                            translated_value.append(_translated_sub_collection)
+                        was_translated = None
+
+                    else:
+                        translated_value = original_value
+                        was_translated = False
+                        for _uparma_v, _orgstyle_v in org_value_translations:
+                            if _orgstyle_v == original_value:
+                                for (
+                                    _uparma_vt,
+                                    _transtyle_v,
+                                ) in trans_value_translations:
+                                    if _uparma_v == _uparma_vt:
+                                        translated_value = _transtyle_v
+                                        was_translated = True
 
                     template_dict.update(
                         {
                             "translated_key": translated_key,
                             "translated_value": translated_value,
                             "translated_style": translated_style,
-                            "was_translated": True,
+                            "was_translated": was_translated,
+                            "is_parameter_collection": is_parameter_collection,
                         }
                     )
                 if _name is not None:
@@ -316,11 +339,16 @@ class UParma(object):
         for param_name in params_list:
             if style not in self.parameter2id.keys():
                 continue
-            _id = self.parameter2id[style].get(param_name, None)
-            if _id is not None:
-                if self.parameters[_id].get("triggers_rerun", False) is True:
-                    params_that_trigger_rerun.append(param_name)
-
+            if isinstance(param_name, list) is False:
+                listified_param_name = [param_name]
+            else:
+                listified_param_name = param_name
+            for _pname in listified_param_name:
+                _id = self.parameter2id[style].get(_pname, None)
+                if _id is not None:
+                    if self.parameters[_id].get("triggers_rerun", False) is True:
+                        params_that_trigger_rerun.append(param_name)
+                        break
         return params_that_trigger_rerun
 
     def get_default_params(self, style=None):
@@ -343,23 +371,29 @@ class UParma(object):
             if translated_key is None:
                 continue
             else:
-                untranslated_default = value["default_value"]
                 if (
                     "value_translations" in value
                     and len(value["value_translations"]) > 0
                 ):
                     if style in value["value_translations"]:
-                        translated_default = dict(
-                            value["value_translations"][style]
-                        ).get(
-                            untranslated_default,
-                            dict(value["value_translations"][style]),
-                        )
+                        if value["default_value"] is not None:
+                            translated_default = dict(
+                                value["value_translations"][style]
+                            ).get(
+                                value["default_value"],
+                                value["default_value"],
+                            )
+                        else:
+                            translated_default = dict(
+                                value["value_translations"][style]
+                            )
                     else:
-                        translated_default = untranslated_default
+                        translated_default = value["default_value"]
                 else:
-                    translated_default = untranslated_default
+                    translated_default = value["default_value"]
                 params[name] = {
+                    "original_key": value["name"],
+                    "original_value": value["default_value"],
                     "translated_key": translated_key,
                     "translated_value": translated_default,
                 }
