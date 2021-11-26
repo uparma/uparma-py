@@ -63,28 +63,6 @@ test_data_list = [
             ],
         ],
     },
-    {
-        "uparma_jsons": {
-            ("general", "parameters"): [
-                {
-                    "default_value": "tdc",
-                    "description": " Method to assign FDR and PEP to PSMs",
-                    "key_translations": {
-                        "percolator_style_1": ["-y", "-Y"],
-                        "percolator_style_2": ["-y", "-Y"],
-                        "ursgal_style_1": "percolator_post_processing",
-                    },
-                    "name": "percolator_post_processing",
-                    "tag": ["validation"],
-                    "triggers_rerun": True,
-                    "value_translations": {},
-                    "value_type": "select",
-                },
-            ]
-        },
-        "input": [["-y", "-Y"]],
-        "results": ["-y", "-Y"],
-    },
 ]
 
 
@@ -93,13 +71,3 @@ def test_identify_params_trigger_rerun(test_dict):
     up = uparma.UParma(parameter_data=test_dict["uparma_jsons"])
     rerun_params = up.identify_parameters_triggering_rerun(test_dict["input"])
     assert rerun_params == test_dict["results"]
-
-
-# def test_identify_params_trigger_rerun_list_param():
-
-#     up = uparma.UParma(parameter_data=test_dict["uparma_jsons"])
-#     params_list = [
-#         ["-y", "-Y"],
-#     ]
-#     style = "percolator_style_1"
-#     rerun_params = up.identify_parameters_triggering_rerun(params_list)
