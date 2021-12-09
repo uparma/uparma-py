@@ -5,7 +5,7 @@ import pprint
 param = {
     ("general", "parameters"): [
         {
-            "name": "precursor_mass_tolerance_unit",
+            "name": "the_uparma_name_for_precursor_mass_tolerance_unit",
             "description": "Precursor mass tolerance unit: available in ppm (parts-per-millon), da (Dalton) or mmu (Milli mass unit)",
             "default_value": "ppm",
             "value_type": "select",
@@ -37,7 +37,7 @@ test_data_list = [
         "translated_style": "msfragger_style_3",
         "input_dict": {"-t": "Da"},
         "results": {
-            "precursor_mass_tolerance_unit": {
+            "the_uparma_name_for_precursor_mass_tolerance_unit": {
                 "translated_key": "precursor_mass_units",
                 "translated_value": 0,
             }
@@ -48,7 +48,7 @@ test_data_list = [
         "translated_style": "xtandem_style_1",
         "input_dict": {"precursor_mass_units": 0},
         "results": {
-            "precursor_mass_tolerance_unit": {
+            "the_uparma_name_for_precursor_mass_tolerance_unit": {
                 "translated_key": "spectrum, parent monoisotopic mass error units",
                 "translated_value": "Daltons",
             }
@@ -59,7 +59,7 @@ test_data_list = [
         "translated_style": "moda_style_1",
         "input_dict": {"precursor_mass_tolerance_unit": "ppm"},
         "results": {
-            "precursor_mass_tolerance_unit": {
+            "the_uparma_name_for_precursor_mass_tolerance_unit": {
                 "translated_key": "PPMTolerance",
                 "translated_value": "ppm",
             }
@@ -73,7 +73,7 @@ test_data_list = [
             "precursor_mass_units": 0,
         },
         "results": {
-            "precursor_mass_tolerance_unit": {
+            "the_uparma_name_for_precursor_mass_tolerance_unit": {
                 "translated_key": "PPMTolerance",
                 "translated_value": "ppm",
             },
@@ -96,6 +96,7 @@ def test_mapping(test_dict):
         translated_style=test_dict["translated_style"],
     )
     pprint.pprint(translated_params)
+    pprint.pprint(test_dict["results"])
     for uparma_key in translated_params.keys():
         assert all(
             r_items in translated_params[uparma_key].items()
