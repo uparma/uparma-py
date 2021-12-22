@@ -1,0 +1,4 @@
+include requirements.txt
+include uparma/version.txt
+graft tests
+graft docs
