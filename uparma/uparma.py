@@ -14,11 +14,11 @@ URLS = {
     (
         "general",
         "parameters",
-    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__version__}/jsons/parameters.json",
+    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__lib_version__}/jsons/parameters.json",
     (
         "general",
         "styles",
-    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__version__}/jsons/styles.json",
+    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__lib_version__}/jsons/styles.json",
 }
 
 base_path = Path(__file__)
