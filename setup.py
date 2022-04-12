@@ -22,6 +22,7 @@ setup(
     package_data={
         "uparma": [
             "version.txt",
+            "lib_version.txt",
         ]
     },
     install_requires=reqs,
