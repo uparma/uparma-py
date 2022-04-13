@@ -1,4 +1,5 @@
 include requirements.txt
 include uparma/version.txt
+include uparma/lib_version.txt
 graft tests
 graft docs
