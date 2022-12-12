@@ -21,11 +21,8 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Install tox
-        run: pip install pytest requests
-
-      - name: Install uparma
+      - name: Install Stuff
         run: pip install -e .
 
-      - name: Run tox
+      - name: Run pytest
         run: pytest tests
