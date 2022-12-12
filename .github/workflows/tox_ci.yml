@@ -24,5 +24,8 @@ jobs:
       - name: Install tox
         run: pip install pytest requests
 
+      - name: Install uparma
+        run: pip install -e .
+
       - name: Run tox
         run: pytest tests
