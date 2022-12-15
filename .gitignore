@@ -7,3 +7,4 @@ pyenv
 .idea
 .DS_Store
 .tox
+uparma/version.txt
