@@ -1,7 +1,6 @@
 __pycache__
 *.pyc
 docs/build
-*.json
 build
 pyenv
 .idea
