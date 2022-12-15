@@ -1,9 +1,13 @@
 import os
+from importlib.metadata import PackageNotFoundError, version
 
-# Load version
-version_path = os.path.join(os.path.dirname(__file__), "version.txt")
-with open(version_path, "r") as version_file:
-    __version__ = version_file.read().strip()
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    __version__ = None
+
+# Version
+__version_str__ = str(__version__)
 
 lib_version_path = os.path.join(os.path.dirname(__file__), "lib_version.txt")
 with open(lib_version_path, "r") as lib_version_file:

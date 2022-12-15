@@ -14,11 +14,13 @@ URLS = {
     (
         "general",
         "parameters",
-    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__lib_version__}/jsons/parameters.json",
+    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/parameters.json",
+    # f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__lib_version__}/jsons/parameters.json",
     (
         "general",
         "styles",
-    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__lib_version__}/jsons/styles.json",
+    ): f"https://raw.githubusercontent.com/uparma/uparma-lib/master/jsons/styles.json",
+    # f"https://raw.githubusercontent.com/uparma/uparma-lib/v{uparma.__lib_version__}/jsons/styles.json",
 }
 
 base_path = Path(__file__)
@@ -84,6 +86,13 @@ class UParma(object):
                 refresh_jsons = True
                 # we will have to pull
 
+            if refresh_jsons is False:
+                with open(full_path) as j:
+                    try:
+                        self.jsons[url_id] = json.load(j)
+                    except json.decoder.JSONDecodeError:
+                        refresh_jsons = True
+
             if refresh_jsons is True:
                 with requests.get(url) as req:
                     with open(full_path, "w") as j:
@@ -94,9 +103,6 @@ class UParma(object):
                             )
                         print(json.dumps(req.json(), indent=2, sort_keys=True), file=j)
                     self.jsons[url_id] = req.json()
-            else:
-                with open(full_path) as j:
-                    self.jsons[url_id] = json.load(j)
 
         # Let's overwrite with custom
         if parameter_data is not None:
