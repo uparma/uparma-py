@@ -3,7 +3,7 @@ uparma-py - Python framework for the uparma project
 
 *UPARMA - Universal Parameter Mapper for Proteomics*
 
-|build-status-github-action| |doc-status| |build-status-appveyor| |pypi|
+|build-status-github-action| |doc-status| |pypi|
 
 .. |build-status-github-action| image:: https://github.com/uparma/uparma-py/actions/workflows/tox_ci.yml/badge.svg
    :target: https://github.com/uparma/uparma-py/actions/workflows/tox_ci.yml
