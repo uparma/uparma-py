@@ -12,10 +12,6 @@ uparma-py - Python framework for the uparma project
 .. |doc-status| image:: http://readthedocs.org/projects/parma-py/badge/?version=latest
    :target: http://parma-py.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-   
-.. |build-status-appveyor| image:: https://ci.appveyor.com/api/projects/status/uig935fvjxnn6xmf?svg=true
-   :target: https://ci.appveyor.com/project/fufezan-lab/uparma-py
-   :alt: AppVeyor CI status
 
 .. |pypi| image:: https://github.com/uparma/uparma-py/actions/workflows/cd.yml/badge.svg
    :target: https://github.com/uparma/uparma-py/actions/workflows/cd
