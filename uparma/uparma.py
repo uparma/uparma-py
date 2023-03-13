@@ -233,8 +233,8 @@ class UParma(object):
                 }
             }
 
+        In cases where e.g. only a flag is set, the translated key will be None.
         """
-        cannot_be_translated = "{0} for {1} cannot be translated into {2}"
         translated_params = UParmaDict()
 
         for original_key, original_value in param_dict.items():
@@ -321,7 +321,8 @@ class UParma(object):
                                     if _uparma_v == _uparma_vt:
                                         translated_value = _transtyle_v
                                         was_translated = True
-
+                    if translated_key.endswith("<DROP_KEY>"):
+                        translated_key = None
                     template_dict.update(
                         {
                             "translated_key": translated_key,
