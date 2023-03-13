@@ -71,6 +71,10 @@ def test_simple_back_and_forward_mapping(test_id):
                 for k, v in forward_mapping.items():
                     if isinstance(v["translated_key"], list):
                         continue
+                    if v["original_key"].endswith("<DROP_KEY>"):
+                        continue
+                    if v["translated_key"] is None:
+                        continue
                     if v["was_translated"] is True:
                         new_input[v["translated_key"]] = v["translated_value"]
                         print("Reformatted forward_mapping", new_input)
