@@ -141,12 +141,10 @@ class UParma(object):
                 # _id = uparma_entry["_id"]
                 self.parameters[_id] = uparma_entry
                 for key, value in uparma_entry["key_translations"].items():
-
                     if isinstance(value, list):
                         value = tuple(value)
 
                     if key in self.parameter2id.keys():
-
                         # found key does value also exist
                         if value in self.parameter2id[key]:
                             # parameter already found
@@ -321,8 +319,14 @@ class UParma(object):
                                     if _uparma_v == _uparma_vt:
                                         translated_value = _transtyle_v
                                         was_translated = True
-                    if translated_key.endswith("<DROP_KEY>"):
-                        translated_key = None
+                    if isinstance(translated_key, tuple) is True:
+                        translated_key = [
+                            None if key.endswith("DROP_KEY") else key
+                            for key in translated_key
+                        ]
+                    else:
+                        if translated_key.endswith("<DROP_KEY>"):
+                            translated_key = None
                     template_dict.update(
                         {
                             "translated_key": translated_key,
@@ -402,6 +406,14 @@ class UParma(object):
                         translated_default = value["default_value"]
                 else:
                     translated_default = value["default_value"]
+                if isinstance(translated_key, list) is True:
+                    translated_key = [
+                        None if key.endswith("DROP_KEY") else key
+                        for key in translated_key
+                    ]
+                else:
+                    if translated_key.endswith("<DROP_KEY>"):
+                        translated_key = None
                 params[name] = {
                     "original_key": value["name"],
                     "original_value": value["default_value"],
