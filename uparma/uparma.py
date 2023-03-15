@@ -321,7 +321,7 @@ class UParma(object):
                                         was_translated = True
                     if isinstance(translated_key, tuple) is True:
                         translated_key = [
-                            None if key.endswith("DROP_KEY") else key
+                            None if key.endswith("<DROP_KEY>") else key
                             for key in translated_key
                         ]
                     else:
@@ -408,7 +408,7 @@ class UParma(object):
                     translated_default = value["default_value"]
                 if isinstance(translated_key, list) is True:
                     translated_key = [
-                        None if key.endswith("DROP_KEY") else key
+                        None if key.endswith("<DROP_KEY>") else key
                         for key in translated_key
                     ]
                 else:
