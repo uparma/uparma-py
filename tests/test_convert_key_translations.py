@@ -6,10 +6,9 @@ import os
 from pathlib import Path
 
 test_input_dict = {
-    "allow_multiple_variable_mods_on_residue": False,
-    "mass_diff_to_variable_mod": False,
-    "enzyme_specificity": "full",
-    "localize_delta_mass": True
+    "allow_multiple_variable_mods_on_residue": True,
+    "mass_diff_to_variable_mod": True,
+    "localize_delta_mass": False
 }
 
 test_parameter_list = [
@@ -176,6 +175,7 @@ test_parameter_list = [
 def test_load_data(test_parameters):
     up = uparma.UParma(refresh_jsons=False, parameter_data=test_parameter_list[0]["input"])
     translation = up.convert(param_dict=test_input_dict,  translated_style="msfragger_style_3")
-    assert translation["localize_delta_mass"]["translated_value"] == 1
-    assert translation["allow_multiple_variable_mods_on_residue"]["translated_value"] == 0
-    assert translation["write_mass_diff_to_variable_mod"]["translated_value"] == 0
+    assert translation["allow_multiple_variable_mods_on_residue"]["translated_value"] == 1
+    assert translation["allow_multiple_variable_mods_on_residue"]["was_translated"]
+    assert translation["write_mass_diff_to_variable_mod"]["translated_value"] == 1
+    assert translation["write_mass_diff_to_variable_mod"]["was_translated"]
