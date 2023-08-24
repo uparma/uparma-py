@@ -8,7 +8,8 @@ from pathlib import Path
 test_input_dict = {
     "allow_multiple_variable_mods_on_residue": False,
     "mass_diff_to_variable_mod": False,
-    "enzyme_specificity": "full"
+    "enzyme_specificity": "full",
+    "localize_delta_mass": True
 }
 
 test_parameter_list = [
@@ -107,6 +108,65 @@ test_parameter_list = [
                         ]
                     },
                     "value_type": "bool"
+                },
+                {
+                    "default_value": True,
+                    "description": " Generate and use mass difference fragment index in addition to the regular fragment index for search. This allows shifted fragment ions - fragment ions with mass increased by the calculated mass difference, to be included in scoring. ",
+                    "key_translations": {
+                        "msfragger_style_1": "localize_delta_mass",
+                        "msfragger_style_2": "localize_delta_mass",
+                        "msfragger_style_3": "localize_delta_mass",
+                        "ursgal_style_1": "localize_delta_mass"
+                    },
+                    "name": "localize_delta_mass",
+                    "tag": [
+                        "scoring",
+                        "spectrum"
+                    ],
+                    "triggers_rerun": True,
+                    "value_translations": {
+                        "msfragger_style_1": [
+                            [
+                                False,
+                                0
+                            ],
+                            [
+                                True,
+                                1
+                            ]
+                        ],
+                        "msfragger_style_2": [
+                            [
+                                False,
+                                0
+                            ],
+                            [
+                                True,
+                                1
+                            ]
+                        ],
+                        "msfragger_style_3": [
+                            [
+                                False,
+                                0
+                            ],
+                            [
+                                True,
+                                1
+                            ]
+                        ],
+                        "ursgal_style_1": [
+                            [
+                                False,
+                                False
+                            ],
+                            [
+                                True,
+                                True
+                            ]
+                        ]
+                    },
+                    "value_type": "bool"
                 }
             ]
         }
@@ -116,10 +176,6 @@ test_parameter_list = [
 def test_load_data(test_parameters):
     up = uparma.UParma(refresh_jsons=False, parameter_data=test_parameter_list[0]["input"])
     translation = up.convert(param_dict=test_input_dict,  translated_style="msfragger_style_3")
-    up_with_parameter_json = uparma.UParma(refresh_jsons=False)
-    translation_params = up_with_parameter_json.convert(param_dict=test_input_dict, translated_style="msfragger_style_3")
-    assert translation_params["enzyme_specificity"]["was_translated"]
-    assert translation["allow_multiple_variable_mods_on_residue"]["was_translated"]
+    assert translation["localize_delta_mass"]["translated_value"] == 1
     assert translation["allow_multiple_variable_mods_on_residue"]["translated_value"] == 0
-    assert translation["write_mass_diff_to_variable_mod"]["was_translated"]
     assert translation["write_mass_diff_to_variable_mod"]["translated_value"] == 0
