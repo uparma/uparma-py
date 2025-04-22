@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import requests
 import os
 import json
@@ -421,6 +420,54 @@ class UParma(object):
                     "translated_value": translated_default,
                 }
         return params
+
+    def convert_to_new_style(
+        self, old_dict, translation_style, node_name=None
+    ) -> tuple[dict, dict]:
+        """Converts old urun_parameters_dict to new style with translated key/value pairs.
+
+        Args:
+            old_dict: Contains old parameter dict.
+            translation_style: Contains translation style to be used.
+            node_name: Specific Node name with version in new U3 style.
+
+        Returns:
+            Tuple with parameter dict in new style and old translation dict with all information inside.
+        """
+        translations = {
+            "uparameters": self.convert(
+                old_dict,
+                translated_style=translation_style,
+            ),
+            "default": self.get_default_params(style=translation_style),
+            "all_params": {},
+        }
+        translations["all_params"].update(translations["default"])
+        translations["all_params"].update(translations["uparameters"])
+
+        translations["parameters_triggering_rerun"] = (
+            self.identify_parameters_triggering_rerun(
+                [v["translated_key"] for k, v in translations["all_params"].items()],
+                style=translation_style,
+            )
+        )
+        translations["parameters_triggering_rerun_with_values"] = []
+
+        for k, v in translations["all_params"].items():
+            if v["translated_key"] in translations["parameters_triggering_rerun"]:
+                translations["parameters_triggering_rerun_with_values"].append(
+                    (v["translated_key"], v["translated_value"])
+                )
+
+        translations["parameters_have_been_translated"] = True
+        if node_name is None:
+            node_name = f"{translation_style.split('_')[0]}:version"
+        new_dict = {node_name: {}}
+        for k, v in translations["uparameters"].items():
+            if k == "details":
+                continue
+            new_dict[node_name].update({v["translated_key"]: v["translated_value"]})
+        return new_dict, translations
 
 
 class UParmaDict(dict):
